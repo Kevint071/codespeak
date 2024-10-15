@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int            @id @default(autoincrement())
+  name         String
+  username     String         @unique
+  email        String         @unique
+  password     String
+  gender       String?
+  birthdate    DateTime?      @db.Date
+  aboutMe      String?
+  imageProfile String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  interests    UserInterest[]
+}
+
+model Interest {
+  id        Int            @id @default(autoincrement())
+  name      String
+  users     UserInterest[]
+  createdAt DateTime       @default(now())
+}
+
+model UserInterest {
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  interest   Interest @relation(fields: [interestId], references: [id])
+  interestId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@id([userId, interestId])
+}
+
+// // Modelos para recursos de aprendizaje
+
+// model Category {
+//   id     Int     @id @default(autoincrement())
+//   name   String
+//   topics Topic[]
+// }
+
+// model Topic {
+//   id         Int       @id @default(autoincrement())
+//   title      String
+//   categoryId Int
+//   category   Category  @relation(fields: [categoryId], references: [id])
+//   subitems   Subitem[]
+// }
+
+// model Subitem {
+//   id       Int       @id @default(autoincrement())
+//   title    String
+//   topicId  Int
+//   topic    Topic     @relation(fields: [topicId], references: [id])
+//   contents Content[]
+// }
+
+// model Content {
+//   id        Int     @id @default(autoincrement())
+//   type      String
+//   value     String
+//   subitemId Int
+//   subitem   Subitem @relation(fields: [subitemId], references: [id])
+// }
