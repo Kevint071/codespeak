@@ -5,18 +5,17 @@ import { useParams, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
 export default function AccountSettings() {
-	const [showPasswordModal, setShowPasswordModal] = useState(false);
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [modalType, setModalType] = useState(null);
 
 	const params = useParams();
 	const userID = params.userID;
 
 	const handleChangePassword = () => {
-		setShowPasswordModal(true);
+		setModalType("password");
 	};
 
 	const handleDeleteAccount = () => {
-		setShowDeleteModal(true);
+		setModalType("delete");
 	};
 
 	return (
@@ -60,14 +59,15 @@ export default function AccountSettings() {
 					/>
 				</div>
 			</div>
-			{showPasswordModal && (
+			{modalType === "password" && (
 				<PasswordChangeModal
-					onClose={() => setShowPasswordModal(false)}
+					onClose={() => setModalType(null)}
 					userID={userID}
 				/>
 			)}
-			{showDeleteModal && (
-				<DeleteAccountModal onClose={() => setShowDeleteModal(false)} />
+
+			{modalType === "delete" && (
+				<DeleteAccountModal onClose={() => setModalType(null)} />
 			)}
 		</div>
 	);
