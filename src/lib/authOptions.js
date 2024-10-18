@@ -12,11 +12,12 @@ export const authOptions = {
 				email: {
 					label: "email",
 					type: "email",
-					placeholder: "example@email.com",
+					placeholder: "example@email.com", // Formato esperado para el correo
+				},
 				password: {
 					label: "password",
 					type: "password",
-					placeholder: "**********",
+					placeholder: "**********", // Formato esperado para la contraseña
 				},
 			},
 			// Función que autoriza al usuario usando las credenciales proporcionadas
