@@ -5,15 +5,20 @@ import { X, ImagePlus } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 
 function PersonalInfo() {
+	// Obtiene el parámetro 'userID' de la URL actual
 	const params = useParams();
+
+	// Estado para manejar intereses, modo edición, y estado de actualización
 	const [interests, setInterests] = useState([]);
-	const [isEditing, setIsEditing] = useState(false);
-	const [datosActualizados, setDatosActualizado] = useState(true);
+	const [isEditing, setIsEditing] = useState(false); // Si se está editando o no
+	const [datosActualizados, setDatosActualizado] = useState(true); // Indica si los datos han sido actualizados
 
-	const [imageFile, setImageFile] = useState(null);
-	const [imageProfileUrl, setImageProfileUrl] = useState(null);
-	const [imagenActual, setImagenActual] = useState(imageProfileUrl);
+	// Estado para manejar la imagen de perfil
+	const [imageFile, setImageFile] = useState(null); // Archivo de la imagen seleccionada
+	const [imageProfileUrl, setImageProfileUrl] = useState(null); // URL temporal para previsualizar la imagen
+	const [imagenActual, setImagenActual] = useState(imageProfileUrl); // Mantiene la URL actual de la imagen
 
+	// Inicializa el formulario con valores por defecto
 	const { register, handleSubmit, setValue, getValues } = useForm({
 		defaultValues: {
 			name: "",
@@ -24,6 +29,7 @@ function PersonalInfo() {
 		},
 	});
 
+	// Agrega un nuevo interés si no existe en la lista
 	const addInterest = useCallback(
 		(interestName) => {
 			if (
@@ -32,36 +38,40 @@ function PersonalInfo() {
 			) {
 				setInterests((prevInterests) => [
 					...prevInterests,
-					{ id: Date.now(), name: interestName },
+					{ id: Date.now(), name: interestName }, // Genera un ID único
 				]);
-				setDatosActualizado(false);
+				setDatosActualizado(false); // Indica que hay cambios no guardados
 			}
 		},
 		[interests],
 	);
 
+	// Elimina un interés de la lista por su ID
 	const removeInterest = useCallback((id) => {
 		setInterests((prevInterests) =>
 			prevInterests.filter((interest) => interest.id !== id),
 		);
-		setDatosActualizado(false);
+		setDatosActualizado(false); // Marca que hay cambios pendientes
 	}, []);
 
+	// Llama a la API para obtener los datos del perfil y los asigna al formulario
 	const fetchProfile = useCallback(async () => {
 		try {
 			const response = await fetch(`/api/profile/${params.userID}`);
 			const data = await response.json();
 			if (data.birthdate) {
-				const formattedDate = data.birthdate.split("T")[0];
+				const formattedDate = data.birthdate.split("T")[0]; // Formatea la fecha de nacimiento
 				setValue("birthdate", formattedDate);
 			}
 			if (data) {
+				// Rellena los campos del formulario con los datos del perfil
 				setValue("name", data.name);
 				setValue("username", data.username);
 				setValue("gender", data.gender);
 				setValue("aboutMe", data.aboutMe);
 				setImageProfileUrl(data.imageProfile);
-				setImagenActual(data.imageProfile);
+				setImagenActual(data.imageProfile); // Establece la imagen actual
+				// Mapea intereses a la estructura local
 				setInterests(
 					data.interests.map((ui) => ({
 						id: ui.interest.id,
@@ -74,14 +84,16 @@ function PersonalInfo() {
 		}
 	}, [params.userID, setValue]);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: It needs to be used only once when rendering the component.
+	// Efecto que se ejecuta solo una vez para cargar el perfil al montar el componente
 	useEffect(() => {
 		fetchProfile();
 	}, []);
 
+	// Maneja la lógica de envío del formulario, incluyendo la actualización del perfil
 	const onSubmit = handleSubmit(async (datos) => {
 		try {
 			const formData = new FormData();
+			// Añade los datos del formulario al objeto FormData
 			formData.append("name", datos.name);
 			formData.append("username", datos.username);
 			formData.append("gender", datos.gender);
@@ -90,17 +102,20 @@ function PersonalInfo() {
 				"interests",
 				JSON.stringify(interests.map((interest) => interest.name)),
 			);
+			// Solo agrega la imagen si ha cambiado
 			if (imageProfileUrl == null || imageProfileUrl.startsWith("blob")) {
 				formData.append("imageFile", imageFile);
 			} else {
 				formData.append("imageFile", "");
 			}
+			// Agrega la fecha de nacimiento si está presente
 			if (datos.birthdate) {
 				formData.append("birthdate", datos.birthdate);
 			} else {
 				formData.append("birthdate", "");
 			}
 
+			// Llama a la API para actualizar el perfil del usuario
 			const response = await fetch(`/api/profile/${params.userID}`, {
 				method: "PUT",
 				body: formData,
@@ -110,12 +125,12 @@ function PersonalInfo() {
 
 			if (response.ok) {
 				console.log("Perfil actualizado con éxito");
-				setDatosActualizado(true);
-				setIsEditing(false);
-				await fetchProfile(); // Refetch the profile to ensure we have the latest data
+				setDatosActualizado(true); // Marca que los datos están actualizados
+				setIsEditing(false); // Salir del modo de edición
+				await fetchProfile(); // Vuelve a cargar el perfil con los últimos datos
 				if (imagenActual !== imageProfileUrl) {
 					setImagenActual(imageProfileUrl);
-					window.location.reload();
+					window.location.reload(); // Recarga la página si la imagen cambia
 				}
 			} else {
 				console.error("Error al actualizar perfil", result);
@@ -125,30 +140,32 @@ function PersonalInfo() {
 		}
 	});
 
-	// Logica user image
-
+	// Ref para el input de archivos (imagen de perfil)
 	const fileInputRef = useRef(null);
 
+	// Maneja la interacción para subir una nueva imagen de perfil
 	const handleInteraction = () => {
 		if (isEditing && fileInputRef.current) {
-			fileInputRef.current.click();
+			fileInputRef.current.click(); // Simula un clic en el input de archivos
 		}
 	};
 
+	// Manejador para cambiar la imagen de perfil seleccionada
 	const handleFileChange = (e) => {
 		if (e.target.files?.[0]) {
 			const file = e.target.files[0];
-			setImageFile(file);
-			const objectUrl = URL.createObjectURL(file);
-			setImageProfileUrl(objectUrl);
+			setImageFile(file); // Establece el archivo de imagen
+			const objectUrl = URL.createObjectURL(file); // Crea una URL temporal para previsualización
+			setImageProfileUrl(objectUrl); // Muestra la imagen seleccionada
 		}
 	};
 
+	// Manejador para eliminar la foto de perfil actual
 	const handleDeletePhoto = () => {
-		setImageProfileUrl(null);
-		setImageFile(null);
+		setImageProfileUrl(null); // Elimina la URL de la imagen
+		setImageFile(null); // Limpia el archivo seleccionado
 		if (fileInputRef.current) {
-			fileInputRef.current.value = "";
+			fileInputRef.current.value = ""; // Limpia el input de archivos
 		}
 	};
 

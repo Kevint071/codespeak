@@ -25,6 +25,7 @@ const RenderBlocks = ({ content, categoria }) => {
 			children,
 		} = child;
 
+		// Renderiza el texto con negrita, cursiva, tachado o código
 		if (bold) return <strong className="font-semibold">{text}</strong>;
 		if (italic) return <em>{text}</em>;
 		if (strikethrough) return <s>{text}</s>;
@@ -35,11 +36,12 @@ const RenderBlocks = ({ content, categoria }) => {
 			return (
 				<code
 					className="rounded bg-gray-800 p-1 text-sm"
-					// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+					// Uso de dangerouslySetInnerHTML para resaltar el código
 					dangerouslySetInnerHTML={{ __html: highlightedCode }}
 				/>
 			);
 		}
+		// Renderiza los enlaces con soporte para abrir en nueva pestaña
 		if (type === "link") {
 			return (
 				<a href={url} target="_blank" rel="noopener noreferrer">
@@ -48,18 +50,20 @@ const RenderBlocks = ({ content, categoria }) => {
 			);
 		}
 
+		// Si no hay formato especial, devuelve el texto sin modificar
 		return text;
 	};
 
-	// Renderiza bloques de contenido según su tipo
+	// Renderiza bloques de contenido según su tipo (párrafo, encabezado, lista, etc.)
 	const renderBlock = (block) => {
 		const { type, children, level } = block;
 		switch (type) {
 			case "paragraph":
 				return (
 					<p className="my-2 text-[18px] leading-8">
+						{/* Renderiza cada "child" del párrafo */}
 						{children.map((child, idx) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 							<React.Fragment key={idx}>
 								{renderChild(child)}
 							</React.Fragment>
@@ -67,9 +71,10 @@ const RenderBlocks = ({ content, categoria }) => {
 					</p>
 				);
 			case "heading": {
-				const HeadingTag = `h${level || 1}`;
+				const HeadingTag = `h${level || 1}`; // Determina el nivel del encabezado
 				let headingClass = "font-bold";
 
+				// Ajusta las clases según el nivel del encabezado
 				switch (level) {
 					case 1:
 						headingClass += " " + "text-4xl my-10";
@@ -91,11 +96,11 @@ const RenderBlocks = ({ content, categoria }) => {
 				);
 			}
 			case "list":
-				return renderList(block);
+				return renderList(block); // Renderiza una lista (ordenada o no)
 			case "image":
-				return renderImage(block);
+				return renderImage(block); // Renderiza una imagen
 			case "code":
-				return renderCodeBlock(block);
+				return renderCodeBlock(block); // Renderiza un bloque de código
 			default:
 				return null;
 		}
@@ -103,7 +108,7 @@ const RenderBlocks = ({ content, categoria }) => {
 
 	// Renderiza listas, ya sean ordenadas o no
 	const renderList = ({ format, children }) => {
-		const ListTag = format === "ordered" ? "ol" : "ul";
+		const ListTag = format === "ordered" ? "ol" : "ul"; // Determina el tipo de lista
 		const listStyle =
 			format === "ordered"
 				? { listStyleType: "decimal" }
@@ -112,10 +117,11 @@ const RenderBlocks = ({ content, categoria }) => {
 		return (
 			<ListTag className="my-6 ml-8" style={listStyle}>
 				{children.map((item, index) => (
-					// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+					// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 					<li key={index} style={{ display: "list-item" }}>
+						{/* Renderiza cada "child" de la lista */}
 						{item.children.map((child, idx) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 							<React.Fragment key={idx}>
 								{renderChild(child)}
 							</React.Fragment>
@@ -126,55 +132,57 @@ const RenderBlocks = ({ content, categoria }) => {
 		);
 	};
 
-	// Renderiza imágenes
+	// Renderiza imágenes con su texto alternativo y leyenda
 	const renderImage = ({ image }) => {
-		if (!image) return null;
+		if (!image) return null; // Verifica si hay una imagen válida
 
 		return (
 			<figure className="my-4">
 				<img
 					src={image.url}
-					alt={image.alternativeText || ""}
+					alt={image.alternativeText || ""} // Usa texto alternativo si está disponible
 					width={image.width}
 					height={image.height}
 					className="h-auto max-w-full"
 				/>
 				{image.caption && (
 					<figcaption className="mt-2 text-center">
-						{image.caption}
+						{image.caption} {/* Muestra la leyenda de la imagen */}
 					</figcaption>
 				)}
 			</figure>
 		);
 	};
 
-	// Renderiza bloques de código con resaltado
+	// Renderiza bloques de código con resaltado de sintaxis
 	const renderCodeBlock = ({ language = "plaintext", children }) => {
 		const code = children[0].text;
-		const highlightedCode = hljs.highlight(code, { language }).value;
-		const lines = highlightedCode.split("\n");
+		const highlightedCode = hljs.highlight(code, { language }).value; // Aplica resaltado
+		const lines = highlightedCode.split("\n"); // Divide el código en líneas
 
 		return (
 			<div className="my-10 overflow-hidden rounded-lg bg-gray-900 shadow-lg">
 				<div className="flex items-center justify-between bg-gray-800 px-4 py-2">
 					<span className="text-sm font-medium text-cyan-400">
-						{language}
+						{language} {/* Muestra el lenguaje del código */}
 					</span>
-					<CopyButton code={code} />
+					<CopyButton code={code} />{" "}
+					{/* Botón para copiar el código */}
 				</div>
 				<div className="flex">
+					{/* Números de línea */}
 					<div className="flex flex-col justify-between bg-gray-800 px-3 pb-[14px] pt-[15px] text-right font-mono text-sm leading-4 text-gray-500">
 						{lines.map((_, i) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+							// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 							<div key={i} className="select-none text-sm">
-								{i + 1}
+								{i + 1} {/* Muestra el número de línea */}
 							</div>
 						))}
 					</div>
 					<pre className="flex-1 overflow-x-auto px-5 py-[14px] leading-4">
 						<code
 							className={`language-${language} text-sm`}
-							// biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+							// Uso de dangerouslySetInnerHTML para mostrar el código resaltado
 							dangerouslySetInnerHTML={{
 								__html: highlightedCode,
 							}}
@@ -188,15 +196,17 @@ const RenderBlocks = ({ content, categoria }) => {
 	return (
 		<Suspense fallback={<div>Loading...</div>}>
 			<div className="text-lg">
-				{/* Verifica si hay contenido disponible */}
+				{/* Verifica si hay contenido disponible para renderizar */}
 				{content && content.length > 0 ? (
 					content.map((block, index) => (
-						// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+						// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 						<React.Fragment key={index}>
-							{renderBlock(block)}
+							{renderBlock(block)}{" "}
+							{/* Renderiza cada bloque de contenido */}
 						</React.Fragment>
 					))
 				) : (
+					// Mensaje si no hay contenido disponible
 					<p>No hay contenido disponible.</p>
 				)}
 			</div>

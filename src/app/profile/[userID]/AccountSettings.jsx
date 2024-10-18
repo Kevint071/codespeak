@@ -4,16 +4,20 @@ import { useForm } from "react-hook-form";
 import { useParams, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
+// Componente principal para gestionar la configuración de la cuenta
 export default function AccountSettings() {
+	// Estado para controlar el tipo de modal que se muestra
 	const [modalType, setModalType] = useState(null);
 
 	const params = useParams();
 	const userID = params.userID;
 
+	// Función para mostrar el modal de cambio de contraseña
 	const handleChangePassword = () => {
 		setModalType("password");
 	};
 
+	// Función para mostrar el modal de eliminación de cuenta
 	const handleDeleteAccount = () => {
 		setModalType("delete");
 	};
@@ -25,6 +29,7 @@ export default function AccountSettings() {
 					Configuración de la Cuenta
 				</h1>
 				<div className="space-y-6">
+					{/* Componente reutilizable para cada opción de configuración */}
 					<SettingItem
 						icon={
 							<Lock className="h-6 w-6 flex-shrink-0 text-cyan-400" />
@@ -59,6 +64,7 @@ export default function AccountSettings() {
 					/>
 				</div>
 			</div>
+			{/* Renderiza el modal correspondiente según el estado */}
 			{modalType === "password" && (
 				<PasswordChangeModal
 					onClose={() => setModalType(null)}
@@ -73,6 +79,7 @@ export default function AccountSettings() {
 	);
 }
 
+// Componente reutilizable para cada ítem de configuración
 function SettingItem({ icon, title, description, action }) {
 	return (
 		<div className="flex flex-col justify-between gap-x-5 rounded-lg bg-gray-800 bg-opacity-50 p-4 transition-colors duration-200 hover:bg-opacity-70 sm:flex-row sm:items-center">
@@ -88,6 +95,7 @@ function SettingItem({ icon, title, description, action }) {
 	);
 }
 
+// Modal para el cambio de contraseña
 function PasswordChangeModal({ onClose, userID }) {
 	const {
 		register,
@@ -97,6 +105,7 @@ function PasswordChangeModal({ onClose, userID }) {
 	} = useForm();
 	const [status, setStatus] = useState(null);
 
+	// Maneja el envío del formulario de cambio de contraseña
 	const onSubmit = async (data) => {
 		try {
 			const res = await fetch(`/api/profile/settings/${userID}`, {
@@ -114,9 +123,7 @@ function PasswordChangeModal({ onClose, userID }) {
 					type: "success",
 					message: "Contraseña actualizada con éxito",
 				});
-				setTimeout(() => {
-					onClose();
-				}, 1000);
+				setTimeout(() => onClose(), 1000);
 			} else {
 				setStatus({
 					type: "error",
@@ -136,19 +143,17 @@ function PasswordChangeModal({ onClose, userID }) {
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+			{/* Muestra el mensaje de estado si existe */}
 			{status && (
 				<div
-					className={`fixed right-4 top-20 z-50 animate-slide-in-from-right rounded-md px-6 py-3 text-white ${
-						status.type === "success"
-							? "bg-green-500/60"
-							: "bg-pink-500/60"
-					}`}
+					className={`fixed right-4 top-20 z-50 animate-slide-in-from-right rounded-md px-6 py-3 text-white ${status.type === "success" ? "bg-green-500/60" : "bg-pink-500/60"}`}
 				>
 					<span className="text-sm font-medium">
 						{status.message}
 					</span>
 				</div>
 			)}
+			{/* Formulario para cambiar la contraseña */}
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="w-full max-w-md rounded-lg bg-gray-900 p-6 text-base"
@@ -166,6 +171,7 @@ function PasswordChangeModal({ onClose, userID }) {
 					</button>
 				</div>
 
+				{/* Input para la contraseña actual */}
 				<div className="mb-4">
 					<input
 						type="password"
@@ -187,6 +193,7 @@ function PasswordChangeModal({ onClose, userID }) {
 					)}
 				</div>
 
+				{/* Input para la nueva contraseña */}
 				<div className="mb-4">
 					<input
 						type="password"
@@ -208,6 +215,7 @@ function PasswordChangeModal({ onClose, userID }) {
 					)}
 				</div>
 
+				{/* Input para confirmar la nueva contraseña */}
 				<div className="mb-4">
 					<input
 						type="password"
@@ -227,6 +235,7 @@ function PasswordChangeModal({ onClose, userID }) {
 					)}
 				</div>
 
+				{/* Botones de acción */}
 				<div className="mt-6 flex justify-end space-x-4">
 					<button
 						type="button"
@@ -247,6 +256,7 @@ function PasswordChangeModal({ onClose, userID }) {
 	);
 }
 
+// Modal para eliminar la cuenta
 function DeleteAccountModal({ onClose }) {
 	const {
 		register,
@@ -258,13 +268,12 @@ function DeleteAccountModal({ onClose }) {
 	const params = useParams();
 	const userID = params.userID;
 
+	// Maneja el envío del formulario para eliminar la cuenta
 	const onSubmit = async (data) => {
 		try {
 			const res = await fetch(`/api/profile/settings/${userID}`, {
 				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-				},
+				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({ password: data.password }),
 			});
 
@@ -299,19 +308,17 @@ function DeleteAccountModal({ onClose }) {
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+			{/* Muestra el mensaje de estado si existe */}
 			{status && (
 				<div
-					className={`fixed right-4 top-20 z-50 animate-slide-in-from-right rounded-md px-6 py-3 text-white ${
-						status.type === "success"
-							? "bg-green-500/60"
-							: "bg-pink-500/60"
-					}`}
+					className={`fixed right-4 top-20 z-50 animate-slide-in-from-right rounded-md px-6 py-3 text-white ${status.type === "success" ? "bg-green-500/60" : "bg-pink-500/60"}`}
 				>
 					<span className="text-sm font-medium">
 						{status.message}
 					</span>
 				</div>
 			)}
+			{/* Formulario para eliminar la cuenta */}
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="w-full max-w-md rounded-lg bg-gray-800 p-6"

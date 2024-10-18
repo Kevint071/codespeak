@@ -33,17 +33,20 @@ const categories = [
 ];
 
 export default function ClientPage({ challenges }) {
+	// Estados para controlar el término de búsqueda, categoría seleccionada, dificultad, calificación y modo de visualización
 	const [searchTerm, setSearchTerm] = useState("");
 	const [selectedCategory, setSelectedCategory] = useState("all");
 	const [selectedDifficulty, setSelectedDifficulty] = useState("all");
 	const [selectedRating, setSelectedRating] = useState("all");
-	const [viewMode, setViewMode] = useState("grid");
+	const [viewMode, setViewMode] = useState("grid"); // Modo de visualización (cuadrícula o lista)
 
+	// Crea una lista de dificultades a partir de las claves del objeto difficultyRanges
 	const difficulties = useMemo(
 		() => ["all", ...Object.keys(difficultyRanges)],
 		[],
 	);
 
+	// Filtra los desafíos en función de la búsqueda, categoría, dificultad y calificación
 	const filteredChallenges = useMemo(() => {
 		return challenges.filter((challenge) => {
 			const titleMatch = challenge.title
@@ -66,8 +69,13 @@ export default function ClientPage({ challenges }) {
 				selectedRating === "all" ||
 				challenge.rating === Number(selectedRating);
 
+			// Retorna true solo si todos los filtros coinciden y el desafío tiene un slug
 			return (
-				titleMatch && categoryMatch && difficultyMatch && ratingMatch && challenge.slug
+				titleMatch &&
+				categoryMatch &&
+				difficultyMatch &&
+				ratingMatch &&
+				challenge.slug
 			);
 		});
 	}, [
@@ -78,6 +86,7 @@ export default function ClientPage({ challenges }) {
 		challenges,
 	]);
 
+	// Calcula las calificaciones disponibles en función de la dificultad seleccionada
 	const availableRatings = useMemo(() => {
 		if (selectedDifficulty === "all") {
 			return ["all", ...new Set(challenges.map((c) => c.rating))].sort(
@@ -87,11 +96,13 @@ export default function ClientPage({ challenges }) {
 		return ["all", ...difficultyRanges[selectedDifficulty]];
 	}, [selectedDifficulty, challenges]);
 
+	// Manejador para cambiar la dificultad seleccionada y ajustar la calificación si es necesario
 	const handleDifficultyChange = useCallback(
 		(difficulty) => {
 			setSelectedDifficulty(difficulty);
 			if (difficulty !== "all" && selectedRating !== "all") {
 				const validRatings = difficultyRanges[difficulty];
+				// Resetea la calificación si no es válida para la nueva dificultad
 				if (!validRatings.includes(Number(selectedRating))) {
 					setSelectedRating("all");
 				}
@@ -100,11 +111,13 @@ export default function ClientPage({ challenges }) {
 		[selectedRating],
 	);
 
+	// Manejador para cambiar la calificación seleccionada y ajustar la dificultad si es necesario
 	const handleRatingChange = useCallback(
 		(rating) => {
 			setSelectedRating(rating);
 			if (rating !== "all" && selectedDifficulty !== "all") {
 				const ratingNum = Number(rating);
+				// Ajusta la dificultad si la calificación no coincide con la dificultad seleccionada
 				const correctDifficulty = Object.entries(difficultyRanges).find(
 					([, range]) => range.includes(ratingNum),
 				)?.[0];
@@ -117,7 +130,8 @@ export default function ClientPage({ challenges }) {
 	);
 
 	return (
-		<div className="container mx-auto min-h-screen rounded-lg px-12 py-8 my-20 text-white">
+		<div className="container mx-auto my-20 min-h-screen rounded-lg px-12 py-8 text-white">
+			{/* Encabezado de la página */}
 			<div className="mb-8">
 				<h1 className="mb-4 text-4xl font-bold">
 					Desafíos de Programación
@@ -127,15 +141,18 @@ export default function ClientPage({ challenges }) {
 					programación.
 				</p>
 			</div>
+
+			{/* Controles de filtrado y búsqueda */}
 			<div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
 				<Input
 					placeholder="Buscar desafíos..."
 					value={searchTerm}
-					onChange={(e) => setSearchTerm(e.target.value)}
+					onChange={(e) => setSearchTerm(e.target.value)} // Actualiza el término de búsqueda
 					className="bg-gray-800 text-white"
 				/>
+				{/* Selector de categoría */}
 				<Select
-					onValueChange={setSelectedCategory}
+					onValueChange={setSelectedCategory} // Actualiza la categoría seleccionada
 					value={selectedCategory}
 				>
 					<SelectTrigger className="bg-gray-800 text-white">
@@ -149,8 +166,10 @@ export default function ClientPage({ challenges }) {
 						))}
 					</SelectContent>
 				</Select>
+
+				{/* Selector de dificultad */}
 				<Select
-					onValueChange={handleDifficultyChange}
+					onValueChange={handleDifficultyChange} // Actualiza la dificultad seleccionada
 					value={selectedDifficulty}
 				>
 					<SelectTrigger className="bg-gray-800 text-white">
@@ -164,8 +183,10 @@ export default function ClientPage({ challenges }) {
 						))}
 					</SelectContent>
 				</Select>
+
+				{/* Selector de calificación */}
 				<Select
-					onValueChange={handleRatingChange}
+					onValueChange={handleRatingChange} // Actualiza la calificación seleccionada
 					value={selectedRating}
 				>
 					<SelectTrigger className="bg-gray-800 text-white">
@@ -181,26 +202,30 @@ export default function ClientPage({ challenges }) {
 						))}
 					</SelectContent>
 				</Select>
+
+				{/* Botones para cambiar el modo de vista (grid/lista) */}
 				<div className="flex gap-2 max-sm:hidden">
 					<Button
 						variant={viewMode === "grid" ? "default" : "outline"}
 						size="icon"
-						onClick={() => setViewMode("grid")}
+						onClick={() => setViewMode("grid")} // Cambia a vista de cuadrícula
 					>
 						<Grid className="h-4 w-4" />
 					</Button>
 					<Button
 						variant={viewMode === "list" ? "default" : "outline"}
 						size="icon"
-						onClick={() => setViewMode("list")}
+						onClick={() => setViewMode("list")} // Cambia a vista de lista
 					>
 						<List className="h-4 w-4" />
 					</Button>
 				</div>
 			</div>
+
+			{/* Muestra los desafíos filtrados */}
 			<ChallengeGrid
-				challenges={filteredChallenges}
-				viewMode={viewMode}
+				challenges={filteredChallenges} // Desafíos filtrados según los criterios seleccionados
+				viewMode={viewMode} // Modo de visualización seleccionado
 			/>
 		</div>
 	);
