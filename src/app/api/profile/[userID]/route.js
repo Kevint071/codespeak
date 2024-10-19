@@ -70,7 +70,7 @@ export async function PUT(request, { params }) {
 		const data = {};
 
 		for (const field of fields) {
-			data[field] = formData.get(field) || null;
+			data[field] = formData.get(field) || "";
 		}
 
 		const imageFile = formData.get("imageFile");
