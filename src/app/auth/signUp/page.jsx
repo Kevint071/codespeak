@@ -17,7 +17,7 @@ function SignUpPage() {
         <div className="mt-6">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-600"></div>
+              <div className="w-full border-t border-gray-600"/>
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="bg-black px-2 text-gray-400">
