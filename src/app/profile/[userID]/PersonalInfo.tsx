@@ -1,37 +1,72 @@
+"use client";
+
 import { useEffect, useState, useRef, useCallback } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { userSchema, mappedGenders } from "@/validations/userSchema";
 import { useParams } from "next/navigation";
 import { X, ImagePlus } from "lucide-react";
 import { Input } from "@/components/ui/Input";
+
+type Inputs = {
+	name: string;
+	username: string;
+	gender: string;
+	birthdate: string | null;
+	aboutMe: string | null;
+};
+
+type Interest = {
+	id: number;
+	name: string;
+};
+
+interface ProfileData extends Inputs {
+	imageProfile: string | null;
+	interests: Array<{ interest: { id: number; name: string } }>;
+}
 
 function PersonalInfo() {
 	// Obtiene el parámetro 'userID' de la URL actual
 	const params = useParams();
 
 	// Estado para manejar intereses, modo edición, y estado de actualización
-	const [interests, setInterests] = useState([]);
-	const [isEditing, setIsEditing] = useState(false); // Si se está editando o no
-	const [datosActualizados, setDatosActualizado] = useState(true); // Indica si los datos han sido actualizados
+	const [interests, setInterests] = useState<Interest[]>([]);
+	const [isEditing, setIsEditing] = useState<boolean>(false); // Si se está editando o no
+	const [datosActualizados, setDatosActualizado] = useState<boolean>(true); // Indica si los datos han sido actualizados
 
 	// Estado para manejar la imagen de perfil
-	const [imageFile, setImageFile] = useState(null); // Archivo de la imagen seleccionada
-	const [imageProfileUrl, setImageProfileUrl] = useState(null); // URL temporal para previsualizar la imagen
-	const [imagenActual, setImagenActual] = useState(imageProfileUrl); // Mantiene la URL actual de la imagen
+	const [imageFile, setImageFile] = useState<File | null>(null); // Archivo de la imagen seleccionada
+	const [imageProfileUrl, setImageProfileUrl] = useState<string | null>(null); // URL temporal para previsualizar la imagen
+	const [imagenActual, setImagenActual] = useState<string | null>(
+		imageProfileUrl,
+	); // Mantiene la URL actual de la imagen
 
 	// Inicializa el formulario con valores por defecto
-	const { register, handleSubmit, setValue, getValues } = useForm({
-		defaultValues: {
-			name: "",
-			username: "",
-			gender: null,
-			birthdate: null,
-			aboutMe: null,
-		},
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		formState: { errors },
+	} = useForm<Inputs>({
+		resolver: zodResolver(userSchema),
 	});
+
+	const gendersOptions = Object.entries(mappedGenders).map(([key, value]) => (
+		<option
+			className="bg-gray-800 text-sm text-gray-200"
+			key={key}
+			value={key}
+		>
+			{value}
+		</option>
+	));
+
+	console.log(errors);
 
 	// Agrega un nuevo interés si no existe en la lista
 	const addInterest = useCallback(
-		(interestName) => {
+		(interestName: string) => {
 			if (
 				interestName &&
 				!interests.some((interest) => interest.name === interestName)
@@ -47,7 +82,7 @@ function PersonalInfo() {
 	);
 
 	// Elimina un interés de la lista por su ID
-	const removeInterest = useCallback((id) => {
+	const removeInterest = useCallback((id: number) => {
 		setInterests((prevInterests) =>
 			prevInterests.filter((interest) => interest.id !== id),
 		);
@@ -58,7 +93,7 @@ function PersonalInfo() {
 	const fetchProfile = useCallback(async () => {
 		try {
 			const response = await fetch(`/api/profile/${params.userID}`);
-			const data = await response.json();
+			const data: ProfileData = await response.json();
 			if (data.birthdate) {
 				const formattedDate = data.birthdate.split("T")[0]; // Formatea la fecha de nacimiento
 				setValue("birthdate", formattedDate);
@@ -69,8 +104,8 @@ function PersonalInfo() {
 				setValue("username", data.username);
 				setValue("gender", data.gender);
 				setValue("aboutMe", data.aboutMe);
-				setImageProfileUrl(data.imageProfile);
-				setImagenActual(data.imageProfile); // Establece la imagen actual
+				setImageProfileUrl(data.imageProfile ?? null);
+				setImagenActual(data.imageProfile ?? null); // Establece la imagen actual
 				// Mapea intereses a la estructura local
 				setInterests(
 					data.interests.map((ui) => ({
@@ -84,27 +119,28 @@ function PersonalInfo() {
 		}
 	}, [params.userID, setValue]);
 
-	// Efecto que se ejecuta solo una vez para cargar el perfil al montar el componente
+	// biome-ignore lint/correctness/useExhaustiveDependencies: Efecto que se ejecuta solo una vez para cargar el perfil al montar el componente
 	useEffect(() => {
 		fetchProfile();
 	}, []);
 
 	// Maneja la lógica de envío del formulario, incluyendo la actualización del perfil
-	const onSubmit = handleSubmit(async (datos) => {
+	const onSubmit: SubmitHandler<Inputs> = async (datos) => {
 		try {
 			const formData = new FormData();
+			console.log(datos);
 			// Añade los datos del formulario al objeto FormData
 			formData.append("name", datos.name);
 			formData.append("username", datos.username);
-			formData.append("gender", datos.gender);
-			formData.append("aboutMe", datos.aboutMe);
+			formData.append("gender", datos.gender || "");
+			formData.append("aboutMe", datos.aboutMe || "");
 			formData.append(
 				"interests",
 				JSON.stringify(interests.map((interest) => interest.name)),
 			);
 			// Solo agrega la imagen si ha cambiado
 			if (imageProfileUrl == null || imageProfileUrl.startsWith("blob")) {
-				formData.append("imageFile", imageFile);
+				formData.append("imageFile", imageFile as Blob);
 			} else {
 				formData.append("imageFile", "");
 			}
@@ -138,10 +174,10 @@ function PersonalInfo() {
 		} catch (error) {
 			console.error("Error al actualizar perfil", error);
 		}
-	});
+	};
 
 	// Ref para el input de archivos (imagen de perfil)
-	const fileInputRef = useRef(null);
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	// Maneja la interacción para subir una nueva imagen de perfil
 	const handleInteraction = () => {
@@ -151,7 +187,7 @@ function PersonalInfo() {
 	};
 
 	// Manejador para cambiar la imagen de perfil seleccionada
-	const handleFileChange = (e) => {
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files?.[0]) {
 			const file = e.target.files[0];
 			setImageFile(file); // Establece el archivo de imagen
@@ -259,6 +295,11 @@ function PersonalInfo() {
 								{...register("name", { required: true })}
 								readOnly={!isEditing}
 							/>
+							{errors.name?.message && (
+								<p className="my-1 px-1 text-xs font-bold text-red-500">
+									{errors.name.message}
+								</p>
+							)}
 						</div>
 						<div>
 							<label
@@ -270,9 +311,16 @@ function PersonalInfo() {
 							<Input
 								id="username"
 								className="border-gray-700 bg-gray-800 text-white focus:border-cyan-400 focus:ring-cyan-400"
-								{...register("username", { required: true })}
+								{...register("username", {
+									required: true,
+								})}
 								readOnly={!isEditing}
 							/>
+							{errors.username?.message && (
+								<p className="my-1 px-1 text-xs font-bold text-red-500">
+									{errors.username.message}
+								</p>
+							)}
 						</div>
 						<div>
 							<label
@@ -284,33 +332,10 @@ function PersonalInfo() {
 							<select
 								id="gender"
 								className="mt-1 block w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-white placeholder-gray-400 focus:border-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
-								{...register("gender")}
 								disabled={!isEditing}
+								{...register("gender")}
 							>
-								<option
-									className="bg-gray-800 text-sm text-gray-200"
-									value=""
-								>
-									Seleccionar
-								</option>
-								<option
-									className="bg-gray-800 text-sm text-gray-200"
-									value="masculino"
-								>
-									Masculino
-								</option>
-								<option
-									className="bg-gray-800 text-sm text-gray-200"
-									value="femenino"
-								>
-									Femenino
-								</option>
-								<option
-									className="bg-gray-800 text-sm text-gray-200"
-									value="otro"
-								>
-									Prefiero no decirlo
-								</option>
+								{gendersOptions}
 							</select>
 						</div>
 						<div>
@@ -327,6 +352,11 @@ function PersonalInfo() {
 								{...register("birthdate")}
 								readOnly={!isEditing}
 							/>
+							{errors.birthdate?.message && (
+								<p className="my-1 px-1 text-xs font-bold text-red-500">
+									{errors.birthdate.message}
+								</p>
+							)}
 						</div>
 					</div>
 					<div className="col-span-1 md:col-span-2">
@@ -343,6 +373,11 @@ function PersonalInfo() {
 							{...register("aboutMe")}
 							readOnly={!isEditing}
 						/>
+						{errors.aboutMe?.message && (
+							<p className="my-1 px-1 text-xs font-bold text-red-500">
+								{errors.aboutMe.message}
+							</p>
+						)}
 					</div>
 				</div>
 
@@ -369,9 +404,11 @@ function PersonalInfo() {
 					<div className="flex flex-col gap-2 md:flex-row">
 						<Input
 							placeholder="Añadir interés"
-							className="flex-grow border-gray-700 bg-gray-800 text-white focus:border-cyan-400 focus:ring-cyan-400"
+							className={`flex-grow border-gray-700 bg-gray-800 text-white focus:border-cyan-400 focus:ring-cyan-400 ${!isEditing ? "hidden" : ""}`}
 							readOnly={!isEditing}
-							onKeyDown={(e) => {
+							onKeyDown={(
+								e: React.KeyboardEvent<HTMLInputElement>,
+							) => {
 								if (e.key === "Enter") {
 									e.preventDefault();
 									addInterest(e.currentTarget.value);
@@ -382,13 +419,16 @@ function PersonalInfo() {
 						<button
 							type="button"
 							onClick={() => {
-								const input = document.querySelector(
-									'input[placeholder="Añadir interés"]',
-								);
-								addInterest(input.value);
-								input.value = "";
+								const input =
+									document.querySelector<HTMLInputElement>(
+										'input[placeholder="Añadir interés"]',
+									);
+								if (input) {
+									addInterest(input.value);
+									input.value = "";
+								}
 							}}
-							className="rounded-md bg-gradient-to-r from-cyan-600 to-pink-600 px-4 py-2 text-white transition-colors duration-200 hover:from-cyan-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-gray-900"
+							className={`rounded-md bg-gradient-to-r from-cyan-600 to-pink-600 px-4 py-2 text-white transition-colors duration-200 hover:from-cyan-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-gray-900 ${!isEditing ? "hidden" : ""}`}
 							disabled={!isEditing}
 						>
 							Añadir
