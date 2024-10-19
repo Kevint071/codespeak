@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+// import { API_KEY } from "@/lib/config";
 
 import { IoPerson } from "react-icons/io5";
 // import { LuActivity } from "react-icons/lu";
@@ -9,6 +10,7 @@ import { IoPerson } from "react-icons/io5";
 import { TbLogout, TbFileTypeSql } from "react-icons/tb";
 import { FaPython, FaReact, FaHtml5 } from "react-icons/fa6";
 import { RiJavascriptFill, RiTailwindCssFill } from "react-icons/ri";
+import { useRouter } from "next/navigation";
 
 import DropdownMenuTrigger from "@/components/NavBar/DropDownNavBar/DropDownMenuTrigger";
 
@@ -29,9 +31,26 @@ import {
 function DropDownNavBar() {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const session = useSession();
+	const router = useRouter();
+	console.log(process.env.NEXT_PUBLIC_TUNNEL_URL);
 
 	const logout = () => {
-		signOut();
+		// Detectamos si estamos en el túnel o en localhost
+		const currentUrl = window.location.href;
+		const isTunnel = currentUrl.includes("trycloudflare");
+
+		// Hacemos signOut sin redirección automática
+		signOut({ redirect: false }).then(() => {
+			// Redirigimos manualmente según el entorno
+			console.log("isTunnel", process.env.NEXT_PUBLIC_TUNNEL_URL);
+			const redirectUrl = isTunnel
+				? process.env.NEXT_PUBLIC_TUNNEL_URL  
+				: "http://localhost:3000";
+			console.log("RedirectUrl", redirectUrl);
+
+			router.push(redirectUrl);
+			router.refresh();
+		});
 	};
 
 	const mdHidden = !session.data ? "md:hidden" : "";
@@ -210,7 +229,7 @@ function DropDownNavBar() {
 					{session.data && (
 						<Link href="/auth/login" onClick={logout}>
 							<DropdownMenuItem>
-								Log Out{" "}
+								Log Out
 								<DropdownMenuShortcut>
 									<TbLogout color="red" size={16} />
 								</DropdownMenuShortcut>
