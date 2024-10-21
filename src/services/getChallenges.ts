@@ -10,23 +10,23 @@ export async function getChallenges() {
 		const { data } = await res.json();
 		return data;
 	} catch (error) {
-		console.error("Error en getChallenges: ", error.message);
+		console.error("Error en getChallenges: ", error);
 		throw error; // Re-lanzar el error para que pueda ser capturado en la llamada
 	}
 }
 
-export async function getChallenge(slug) {
+export async function getChallenge(slug: string) {
 	try {
 		const res = await fetch(
-			`${STRAPI_API_URL}/challenges?filters[slug][$eq]=${slug}`,
+			`${STRAPI_API_URL}/challenges?populate=*&filters[slug][$eq]=${slug}`, {next: {revalidate: 5}}
 		);
 		if (!res.ok) {
 			throw new Error("Failed to fetch challenge");
 		}
 		const { data } = await res.json();
-		return data;
+		return data[0];
 	} catch (error) {
-		console.error("Error en getChallenge: ", error.message);
+		console.error("Error en getChallenge: ", error);
 		throw error; // Re-lanzar el error para que pueda ser capturado en la llamada
 	}
 }

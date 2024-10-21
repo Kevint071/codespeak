@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { STRAPI_API_URL } from "@/lib/config";
+import { getChallenge } from "@/services/getChallenges";
 import {
 	Card,
 	CardContent,
@@ -12,21 +12,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Star, ArrowLeft } from "lucide-react";
 
-async function getChallenge(slug: string) {
-	try {
-		const res = await fetch(
-			`${STRAPI_API_URL}/challenges?populate=*&filters[slug][$eq]=${slug}`, {next: {revalidate: 5}}
-		);
-		if (!res.ok) {
-			throw new Error("Failed to fetch challenge");
-		}
-		const { data } = await res.json();
-		return data[0];
-	} catch (error) {
-		console.error("Error en getChallenge: ", error);
-		throw error; // Re-lanzar el error para que pueda ser capturado en la llamada
-	}
-}
 
 export default async function ChallengePage({
 	params,
