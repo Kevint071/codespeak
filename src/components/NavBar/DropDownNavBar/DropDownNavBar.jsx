@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-// import { API_KEY } from "@/lib/config";
 
 import { IoPerson } from "react-icons/io5";
 // import { LuActivity } from "react-icons/lu";
@@ -38,15 +37,18 @@ function DropDownNavBar() {
 		const currentUrl = window.location.href;
 		const isTunnel = currentUrl.includes("trycloudflare");
 
+		isTunnel && console.log("TUNNEL_URL:", process.env.NEXT_PUBLIC_TUNNEL_URL);
+
 		// Hacemos signOut sin redirección automática
 		signOut({ redirect: false }).then(() => {
 			// Redirigimos manualmente según el entorno
 			const redirectUrl = isTunnel
-				? process.env.NEXT_PUBLIC_TUNNEL_URL  
-				: process.env.NEXTAUTH_URL;
+				? process.env.NEXT_PUBLIC_TUNNEL_URL
+				: "/";
 
 			router.push(redirectUrl);
 			router.refresh();
+			console.log(redirectUrl);
 		});
 	};
 
