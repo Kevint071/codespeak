@@ -1,9 +1,10 @@
 import { STRAPI_API_URL } from "@/lib/config";
+import {revalidateTag} from 'next/cache';
 
 export async function getChallenges() {
 	try {
         console.log("API URL: ", STRAPI_API_URL);
-		const res = await fetch(`${STRAPI_API_URL}/challenges?populate=*`);
+		const res = await fetch(`${STRAPI_API_URL}/challenges?populate=*`, { next: { tags: ['challenges'] } });
 		if (!res.ok) {
 			throw new Error("Failed to fetch challenges");
 		}
