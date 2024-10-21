@@ -45,7 +45,7 @@ function DropDownNavBar() {
 			console.log("isTunnel", process.env.NEXT_PUBLIC_TUNNEL_URL);
 			const redirectUrl = isTunnel
 				? process.env.NEXT_PUBLIC_TUNNEL_URL  
-				: "http://localhost:3000";
+				: process.env.NEXTAUTH_URL;
 			console.log("RedirectUrl", redirectUrl);
 
 			router.push(redirectUrl);
