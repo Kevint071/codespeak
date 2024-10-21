@@ -1,7 +1,5 @@
-import { Suspense } from 'react';
 import { getChallenges } from "@/services/getChallenges";
-import ClientPage from "@/app/desafios/clientPage";
-import Loading from "@/app/loading";
+import ClientPage from "@/app/desafios/ClientPage";
 
 export default function MainPage() {
   return (
