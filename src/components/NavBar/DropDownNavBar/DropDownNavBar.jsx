@@ -32,7 +32,6 @@ function DropDownNavBar() {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const session = useSession();
 	const router = useRouter();
-	console.log(process.env.NEXT_PUBLIC_TUNNEL_URL);
 
 	const logout = () => {
 		// Detectamos si estamos en el túnel o en localhost
@@ -42,11 +41,9 @@ function DropDownNavBar() {
 		// Hacemos signOut sin redirección automática
 		signOut({ redirect: false }).then(() => {
 			// Redirigimos manualmente según el entorno
-			console.log("isTunnel", process.env.NEXT_PUBLIC_TUNNEL_URL);
 			const redirectUrl = isTunnel
 				? process.env.NEXT_PUBLIC_TUNNEL_URL  
 				: process.env.NEXTAUTH_URL;
-			console.log("RedirectUrl", redirectUrl);
 
 			router.push(redirectUrl);
 			router.refresh();
