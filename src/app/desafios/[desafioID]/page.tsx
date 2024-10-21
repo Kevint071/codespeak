@@ -15,7 +15,7 @@ import { Star, ArrowLeft } from "lucide-react";
 async function getChallenge(slug: string) {
 	try {
 		const res = await fetch(
-			`${STRAPI_API_URL}/challenges?populate=*&filters[slug][$eq]=${slug}`,
+			`${STRAPI_API_URL}/challenges?populate=*&filters[slug][$eq]=${slug}`, {next: {revalidate: 5}}
 		);
 		if (!res.ok) {
 			throw new Error("Failed to fetch challenge");
