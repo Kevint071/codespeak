@@ -21,15 +21,16 @@ const difficultyRanges = {
 // Define categories
 const categories = [
 	"all",
-	"Lógica",
-	"Algoritmos",
-	"Matemáticas",
-	"Cifrado",
+	"Arrays",
+	"Strings",
+	"Recursión",
+	"Backtracking",
+	"Programación Dinámica",
+	"Estructuras de Datos",
 	"Optimización",
-	"Búsqueda",
+	"Iteración",
 	"Ordenamiento",
-	"Grafos",
-	"Complejidad",
+	"Búsqueda",
 ];
 
 export default function ClientPage({ challenges }) {
