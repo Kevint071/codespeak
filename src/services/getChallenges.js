@@ -1,10 +1,9 @@
 import { STRAPI_API_URL } from "@/lib/config";
-export const revalidate = 5;
 
 export async function getChallenges() {
 	try {
         console.log("API URL: ", STRAPI_API_URL);
-		const res = await fetch(`${STRAPI_API_URL}/challenges?populate=*`, { next: {revalidate: 5} });
+		const res = await fetch(`${STRAPI_API_URL}/challenges?populate=*`);
 		if (!res.ok) {
 			throw new Error("Failed to fetch challenges");
 		}

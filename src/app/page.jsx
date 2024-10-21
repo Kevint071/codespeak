@@ -7,6 +7,8 @@ import H1 from "@/components/ui/H1";
 import Link from "next/link";
 import { clsx } from "clsx";
 
+export const revalidate = 60;
+
 export default async function Homepage() {
 	// Componente principal de la página de inicio, muestra encabezado, botones y contenido dinámico.
 	const value = 16; // Valor usado para definir la condición de estilo en el ícono de flecha hacia abajo.
