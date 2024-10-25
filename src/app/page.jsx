@@ -7,7 +7,7 @@ import H1 from "@/components/ui/H1";
 import Link from "next/link";
 import { clsx } from "clsx";
 
-export default async function Homepage() {
+export default function Homepage() {
 	// Componente principal de la página de inicio, muestra encabezado, botones y contenido dinámico.
 	const value = 16; // Valor usado para definir la condición de estilo en el ícono de flecha hacia abajo.
 
@@ -33,7 +33,7 @@ export default async function Homepage() {
 						href={"/desafios"}
 						className="flex flex-row items-center gap-x-2 rounded-2xl px-2 py-3 font-extrabold"
 					>
-						<p className="gradient-text">Desafíos</p>
+						<button type="button" className="gradient-text">Desafíos</button>
 						<MdKeyboardDoubleArrowRight color="#00ffff" size={20} />
 					</Link>
 				</div>
