@@ -32,7 +32,7 @@ const ChallengeCard = ({ challenge, viewMode }) => {
 			<CardContent
 				className={`flex flex-col ${
 					viewMode === "list"
-						? "w-full py-1 sm:flex-row sm:items-center sm:justify-between max-sm:mb-4"
+						? "w-full py-1 max-sm:mb-4 sm:flex-row sm:items-center sm:justify-between"
 						: "justify-between"
 				} gap-4`}
 			>
@@ -51,8 +51,8 @@ const ChallengeCard = ({ challenge, viewMode }) => {
 							difficulty === "Fácil"
 								? "bg-green-600"
 								: difficulty === "Medio"
-								? "bg-yellow-600"
-								: "bg-red-600"
+									? "bg-yellow-600"
+									: "bg-red-600"
 						}`}
 					>
 						{difficulty}
@@ -63,6 +63,7 @@ const ChallengeCard = ({ challenge, viewMode }) => {
 						{[...Array(9)].map((_, index) => (
 							<Star
 								// Genera estrellas, con relleno si el índice es menor que la calificación
+								// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 								key={index}
 								className={`h-5 w-5 ${
 									index < rating
