@@ -46,7 +46,7 @@ function FormSignUp(): JSX.Element {
 	});
 
 	return (
-		<form className="mt-8 space-y-6" onSubmit={onSubmit}>
+		<form className="mt-8 space-y-6" onSubmit={onSubmit} noValidate>
 			<div className="text-center">
 				<h2 className="mt-6 text-4xl font-bold text-white">
 					Únete a <span className="text-[#00ffff]">Code</span>
@@ -70,10 +70,13 @@ function FormSignUp(): JSX.Element {
 							id="name"
 							type="text"
 							placeholder="James Smith"
+							data-testid="name"
 							{...register("name")}
 						/>
 						{errors.name && (
-							<SpanError>{errors.name.message}</SpanError>
+							<SpanError data-testid="name-error">
+								{errors.name.message}
+							</SpanError>
 						)}
 					</div>
 					<div>
@@ -87,10 +90,13 @@ function FormSignUp(): JSX.Element {
 							id="username"
 							type="text"
 							placeholder="Jamess071"
+							data-testid="username"
 							{...register("username")}
 						/>
 						{errors.username && (
-							<SpanError>{errors.username.message}</SpanError>
+							<SpanError data-testid="username-error">
+								{errors.username.message}
+							</SpanError>
 						)}
 					</div>
 				</div>
@@ -106,15 +112,13 @@ function FormSignUp(): JSX.Element {
 						type="email"
 						autoComplete="email"
 						placeholder="tu@ejemplo.com"
-						{...register("email", {
-							required: {
-								value: true,
-								message: "El email es obligatorio",
-							},
-						})}
+						data-testid="email"
+						{...register("email")}
 					/>
 					{errors.email && (
-						<SpanError>{errors.email.message}</SpanError>
+						<SpanError data-testid="email-error">
+							{errors.email.message}
+						</SpanError>
 					)}
 				</div>
 				<div className="grid grid-cols-2 gap-4">
@@ -130,6 +134,7 @@ function FormSignUp(): JSX.Element {
 							type="password"
 							autoComplete="new-password"
 							placeholder="••••••••"
+							data-testid="password"
 							{...register("password", {
 								required: {
 									value: true,
@@ -138,7 +143,9 @@ function FormSignUp(): JSX.Element {
 							})}
 						/>
 						{errors.password && (
-							<SpanError>{errors.password.message}</SpanError>
+							<SpanError data-testid="password-error">
+								{errors.password.message}
+							</SpanError>
 						)}
 					</div>
 					<div>
@@ -153,6 +160,7 @@ function FormSignUp(): JSX.Element {
 							type="password"
 							autoComplete="new-password"
 							placeholder="••••••••"
+							data-testid="confirmPassword"
 							{...register("confirmPassword", {
 								required: {
 									value: true,
@@ -161,7 +169,7 @@ function FormSignUp(): JSX.Element {
 							})}
 						/>
 						{errors.confirmPassword && (
-							<SpanError>
+							<SpanError data-testid="confirmPassword-error">
 								{errors.confirmPassword.message}
 							</SpanError>
 						)}
@@ -172,6 +180,7 @@ function FormSignUp(): JSX.Element {
 			<div>
 				<button
 					type="submit"
+					data-testid="submit-button"
 					className="flex w-full justify-center rounded-md bg-gradient-to-r from-[#00ffff] to-[#ff69b4] px-4 py-2 text-sm font-medium text-white shadow-sm hover:from-[#00cccc] hover:to-[#ff4499] focus:outline-none focus:ring-2 focus:ring-[#00ffff] focus:ring-offset-2"
 				>
 					Registrarse
