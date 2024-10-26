@@ -60,7 +60,7 @@ function NavBarContent({ topics }) {
 						const isOpen = openTopic === index; // Verifica si este tema está abierto
 						return (
 							<li
-								key={index} // Índice como key para identificar el tema
+								key={name} // Índice como key para identificar el tema
 								className="border-b border-gray-800 last:border-b-0"
 							>
 								{/* Botón para expandir/cerrar el tema */}
@@ -88,9 +88,9 @@ function NavBarContent({ topics }) {
 								>
 									<ul className="border-b border-slate-500 max-lg:border-slate-700 py-2 font-semibold">
 										{subtopics.map(
-											({ name, slug }, subIndex) => (
+											({ name, slug }) => (
 												<Link
-													key={subIndex} // Índice como key para el subtema
+													key={slug} // Índice como key para el subtema
 													href={slug}
 												>
 													<div
