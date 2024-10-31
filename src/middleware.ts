@@ -9,12 +9,12 @@ interface CustomSession {
 
 const redirectTo = (path: string, actualUrl: string) => NextResponse.redirect(new URL(path, actualUrl));
 
-const validateUserAccess = (
+const validateProfileAccess = (
 	session: CustomSession | null,
 	requestedPath: string,
 	actualUrl: string
 ): NextResponse => {
-	if (!session?.user?.id) return redirectTo("/login", actualUrl);
+	if (!session?.user?.id) return redirectTo("/auth/login", actualUrl);
 
 	const { id: sessionUserId } = session.user;
 	if (requestedPath.startsWith("/profile/")) {
@@ -25,15 +25,33 @@ const validateUserAccess = (
 	return NextResponse.next();
 };
 
+const validateSessionActive = (
+	session: CustomSession | null,
+	actualUrl: string
+): NextResponse => {
+	if (session?.user?.id) return redirectTo("/", actualUrl); // Redirige si el usuario ya está logueado
+	return NextResponse.next();
+};
+
 export { default } from "next-auth/middleware";
 
 export async function middleware(req: NextRequest) {
 	const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
 	const session = token as CustomSession | null;
+	const { pathname } = req.nextUrl;
 
-	return validateUserAccess(session, req.nextUrl.pathname, req.url);
+
+	if (pathname.startsWith("/profile")) {
+		return validateProfileAccess(session, pathname, req.url);
+	}
+	
+	if (pathname.startsWith("/auth/login") || pathname.startsWith("/auth/signUp")) {
+		return validateSessionActive(session, req.url);
+	}
+
+	return NextResponse.next();
 }
 
 export const config = {
-	matcher: ["/dashboard/:path*", "/profile/:path*"],
+	matcher: ["/dashboard/:path*", "/profile/:path*", "/auth/login", "/auth/signUp"],
 };
