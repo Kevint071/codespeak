@@ -10,7 +10,7 @@ export default async function Component({ params }) {
 	const topics = await getInfoNavBar(categoria);
 
 	return (
-		<div className="mx-auto container">
+		<div className="mx-auto container max-w-7xl">
 			<div className="flex justify-center gap-x-8 text-gray-300 px-10">
 				<NavBarContent topics={topics} />
 				<Suspense fallback={<MainContentSkeleton />}>
