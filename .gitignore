@@ -10,6 +10,8 @@
 /coverage
 __tests__
 .swc
+jest_html_reporters.html
+jest-html-reporters-attach
 
 # next.js
 /.next/
