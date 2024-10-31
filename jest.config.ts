@@ -21,6 +21,18 @@ const config: Config = {
     '<rootDir>/.next/',
     '<rootDir>/node_modules/',
   ],
+  reporters: [
+    "default",
+    [
+      "jest-html-reporters",
+      {
+        pageTitle: "Reportes de Pruebas",
+        outputPath: "./reports/test-report.html", // Ruta donde se guardará el reporte
+        includeFailureMsg: true,
+        includeConsoleLog: true,
+      },
+    ],
+  ],
 }
  
 export default createJestConfig(config)
