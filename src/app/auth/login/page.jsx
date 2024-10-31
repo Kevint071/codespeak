@@ -4,8 +4,6 @@ import {
 	RegistroGoogle,
 	RegistroGitHub,
 } from "@/components/ui/RegistrosAlternativos";
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
 
 export const metadata = {
 	title: "Iniciar Sesión",
@@ -13,11 +11,6 @@ export const metadata = {
 };
 
 async function SignInPage() {
-	const session = await getServerSession();
-	if (session) {
-		return redirect("/");
-	}
-
 	return (
 		<main className="flex min-h-[calc(100vh-7rem)] flex-grow items-center justify-center p-8">
 			<div className="w-full max-w-md space-y-8">
