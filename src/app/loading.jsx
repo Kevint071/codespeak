@@ -12,6 +12,7 @@ export default function Loading() {
           <Loader2 className="w-full h-full text-cyan-500 animate-pulse" />
         </div>
         <h2 className="text-2xl font-semibold bg-gradient-to-r from-cyan-500 to-pink-500 bg-clip-text text-transparent">Cargando...</h2>
+        <p className="mt-2 max-w-4xl px-4">Por favor espere mientras cargamos la página. Como usamos la versión <strong>Free</strong> de Render, la carga de recursos puede durar hasta 2 minutos...</p>
       </div>
     </div>
   );
