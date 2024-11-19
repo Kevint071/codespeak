@@ -1,8 +1,9 @@
-import React, { Suspense } from "react";
+import React from "react";
 import hljs from "highlight.js/lib/core";
 import javascript from "highlight.js/lib/languages/javascript";
 import python from "highlight.js/lib/languages/python";
 import plaintext from "highlight.js/lib/languages/plaintext";
+import bash from "highlight.js/lib/languages/bash";
 import "highlight.js/styles/atom-one-dark.css";
 import { CopyButton } from "@/components/ui/index";
 
@@ -10,6 +11,7 @@ import { CopyButton } from "@/components/ui/index";
 hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("python", python);
 hljs.registerLanguage("plaintext", plaintext);
+hljs.registerLanguage("bash", bash);
 
 const RenderBlocks = ({ content, categoria }) => {
 	// Renderiza los estilos y el contenido de los "child" basado en su formato
@@ -26,7 +28,12 @@ const RenderBlocks = ({ content, categoria }) => {
 		} = child;
 
 		// Renderiza el texto con negrita, cursiva, tachado o código
-		if (bold) return <strong className="font-semibold">{text}</strong>;
+		if (bold)
+			return (
+				<strong className="font-semibold text-violet-400">
+					{text}
+				</strong>
+			);
 		if (italic) return <em>{text}</em>;
 		if (strikethrough) return <s>{text}</s>;
 		if (code) {
@@ -60,7 +67,7 @@ const RenderBlocks = ({ content, categoria }) => {
 		switch (type) {
 			case "paragraph":
 				return (
-					<p className="my-2 text-[17px] leading-8">
+					<p className="my-6 text-[17px] leading-8">
 						{/* Renderiza cada "child" del párrafo */}
 						{children.map((child, idx) => (
 							// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
@@ -77,13 +84,14 @@ const RenderBlocks = ({ content, categoria }) => {
 				// Ajusta las clases según el nivel del encabezado
 				switch (level) {
 					case 1:
-						headingClass += " " + "text-4xl my-10";
+						headingClass += " " + "text-4xl my-4";
 						break;
 					case 2:
-						headingClass += " " + "text-3xl my-10";
+						headingClass +=
+							" " + "text-3xl mt-6 mb-2 text-cyan-300";
 						break;
 					case 3:
-						headingClass += " " + "text-2xl my-8";
+						headingClass += " " + "text-2xl mt-4 mb-1 text-purple-400";
 						break;
 					default:
 						headingClass += " " + "text-xl my-6";
@@ -115,10 +123,16 @@ const RenderBlocks = ({ content, categoria }) => {
 				: { listStyleType: "disc" };
 
 		return (
-			<ListTag className="my-6 ml-8 text-[16px]"  style={listStyle}>
+			<ListTag
+				className="mt-8 mb-3 ml-8 text-[17px] font-light leading-6"
+				style={listStyle}
+			>
 				{children.map((item, index) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
-					<li key={index} style={{ display: "list-item" }}>
+					<li
+						key={index}
+						style={{ display: "list-item", marginBottom: "20px" }}
+					>
 						{/* Renderiza cada "child" de la lista */}
 						{item.children.map((child, idx) => (
 							// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
@@ -171,15 +185,15 @@ const RenderBlocks = ({ content, categoria }) => {
 				</div>
 				<div className="flex">
 					{/* Números de línea */}
-					<div className="flex flex-col justify-between bg-gray-800 px-3 pb-[14px] pt-[15px] text-right font-mono text-sm leading-4 text-gray-500">
+					<div className="flex flex-col justify-between bg-gray-900 px-3 pb-[14px] pt-[15px] text-right font-mono text-sm leading-4 text-gray-500">
 						{lines.map((_, i) => (
 							// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
-							<div key={i} className="select-none text-sm">
-								{i + 1} {/* Muestra el número de línea */}
+							<div key={i} className="select-none text-sm pl-3">
+								{i + 1}. {/* Muestra el número de línea */}
 							</div>
 						))}
 					</div>
-					<pre className="flex-1 overflow-x-auto px-5 py-[14px] leading-4">
+					<pre className="flex-1 overflow-x-auto pl-3 pr-5 py-[14px] leading-4">
 						<code
 							className={`language-${language} text-sm`}
 							// Uso de dangerouslySetInnerHTML para mostrar el código resaltado
@@ -194,23 +208,21 @@ const RenderBlocks = ({ content, categoria }) => {
 	};
 
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
-			<div className="text-lg">
-				{/* Verifica si hay contenido disponible para renderizar */}
-				{content && content.length > 0 ? (
-					content.map((block, index) => (
-						// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
-						<React.Fragment key={index}>
-							{renderBlock(block)}{" "}
-							{/* Renderiza cada bloque de contenido */}
-						</React.Fragment>
-					))
-				) : (
-					// Mensaje si no hay contenido disponible
-					<p>No hay contenido disponible.</p>
-				)}
-			</div>
-		</Suspense>
+		<div className="text-lg flex flex-col">
+			{/* Verifica si hay contenido disponible para renderizar */}
+			{content && content.length > 0 ? (
+				content.map((block, index) => (
+					// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
+					<React.Fragment key={index}>
+						{renderBlock(block)}{" "}
+						{/* Renderiza cada bloque de contenido */}
+					</React.Fragment>
+				))
+			) : (
+				// Mensaje si no hay contenido disponible
+				<p>No hay contenido disponible.</p>
+			)}
+		</div>
 	);
 };
 
