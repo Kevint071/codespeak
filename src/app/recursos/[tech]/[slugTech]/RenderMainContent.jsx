@@ -60,7 +60,7 @@ const RenderBlocks = ({ content, categoria }) => {
 		switch (type) {
 			case "paragraph":
 				return (
-					<p className="my-2 text-[18px] leading-8">
+					<p className="my-2 text-[17px] leading-8">
 						{/* Renderiza cada "child" del párrafo */}
 						{children.map((child, idx) => (
 							// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
@@ -115,7 +115,7 @@ const RenderBlocks = ({ content, categoria }) => {
 				: { listStyleType: "disc" };
 
 		return (
-			<ListTag className="my-6 ml-8" style={listStyle}>
+			<ListTag className="my-6 ml-8 text-[16px]"  style={listStyle}>
 				{children.map((item, index) => (
 					// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 					<li key={index} style={{ display: "list-item" }}>
