@@ -6,6 +6,35 @@ import { usePathname } from "next/navigation";
 import HamburgerButton from "./HamburgerButton";
 
 function NavBarContent({ topics }) {
+
+	// Función para ordenar los subtopics
+	const orderSubtopics = (subtopics) => {
+		return [...subtopics].sort((a, b) => {
+		// Si ambos tienen order, los ordenamos por order
+		if (a.order !== null && b.order !== null) {
+			return a.order - b.order;
+		}
+		
+		// Si alguno tiene order null, usamos la fecha de creación como fallback
+		if (a.order === null && b.order === null) {
+			return new Date(a.createdAt) - new Date(b.createdAt);
+		}
+		
+		// Si solo uno tiene order null, el que tiene order va primero
+		if (a.order === null) return 1;
+		if (b.order === null) return -1;
+		
+		return 0;
+		});
+	};
+
+	// Ordenar los subtopics de cada tema
+	const orderedData = topics.map(topic => ({
+		...topic,
+		subtopics: orderSubtopics(topic.subtopics)
+	}));
+	console.log(orderedData);
+
 	// Estado para manejar qué tema está abierto en el menú de navegación
 	const [openTopic, setOpenTopic] = useState(null);
 
@@ -56,7 +85,7 @@ function NavBarContent({ topics }) {
 
 				{/* Lista de temas con subtemas */}
 				<ul className="max-h-[calc(100vh-5rem)] w-full overflow-y-auto rounded-lg border-l border-r border-t border-slate-500 max-lg:border-slate-700 bg-transparent shadow-lg max-lg:absolute max-lg:left-0 max-lg:top-20 max-lg:w-screen max-lg:rounded-none bg-slate-900 max-lg:backdrop-blur-none lg:mx-auto lg:max-w-md">
-					{topics.map(({ name, subtopics }, index) => {
+					{orderedData.map(({ name, subtopics }, index) => {
 						const isOpen = openTopic === index; // Verifica si este tema está abierto
 						return (
 							<li
@@ -88,9 +117,9 @@ function NavBarContent({ topics }) {
 								>
 									<ul className="border-b border-slate-500 max-lg:border-slate-700 py-2 font-semibold">
 										{subtopics.map(
-											({ name, slug }) => (
+											({ name, slug, id }) => (
 												<Link
-													key={slug} // Índice como key para el subtema
+													key={id} // Id como key para el subtema
 													href={slug}
 												>
 													<div
