@@ -9,7 +9,7 @@ export default async function Component({ params }) {
 	const enlaceNavBar = params.slugTech;
 
 	return (
-		<div className="container mx-auto max-w-7xl">
+		<div className="container mx-auto max-w-7xl font-light">
 				<div className="flex justify-center gap-x-8 px-10 text-gray-300">
 					<Suspense fallback={<NavBarContentSkeleton />}>
 						<ServerNavbarContent categoria={categoria} />

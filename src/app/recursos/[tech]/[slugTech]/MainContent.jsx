@@ -28,7 +28,7 @@ async function MainContent({ slug, categoria }) {
 			) : (
 				<main className="mx-4 min-h-[calc(100vh-5rem)] w-full">
 					<div className="mx-auto w-full py-10 sm:w-[500px] md:w-[690px] lg:w-[600px] xl:w-[768px]">
-						<h1 className="mb-10 mt-3 w-full text-4xl font-bold text-[#ff69b4]">
+						<h1 className="mb-6 mt-3 w-full text-4xl font-bold text-[#ff69b4]">
 							{title}
 						</h1>
 						<RenderMainContent
