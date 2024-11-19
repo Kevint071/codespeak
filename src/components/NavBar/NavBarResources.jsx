@@ -7,7 +7,7 @@ import { FaPython, FaReact, FaHtml5 } from "react-icons/fa6";
 import { RiJavascriptFill, RiTailwindCssFill } from "react-icons/ri";
 
 const languages = [
-	{ name: "Python", icon: FaPython, link: "python/que-es-python", color: "#34769B" },
+	{ name: "Python", icon: FaPython, link: "python/por-que-aprender-python", color: "#34769B" },
 	{ name: "JavaScript", icon: RiJavascriptFill, link: "javascript/que-es-javascript", color: "#F7DF1E" },
 	{ name: "React", icon: FaReact, link: "react", color: "#61DAFB" },
 	{ name: "HTML", icon: FaHtml5, link: "html", color: "#E34F26" },
