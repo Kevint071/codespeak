@@ -192,7 +192,7 @@ const RenderBlocks = ({ content, categoria }) => {
 							</div>
 						))}
 					</div>
-					<pre className="flex overflow-x-auto pl-3 pr-5 py-[14px]">
+					<pre className="flex overflow-x-auto pl-3 pr-5 py-[14px] custom-scroll">
 						<code
 							className={`language-${language} text-sm`}
 							// Uso de dangerouslySetInnerHTML para mostrar el código resaltado
