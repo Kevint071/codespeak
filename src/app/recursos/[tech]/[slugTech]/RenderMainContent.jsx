@@ -185,15 +185,14 @@ const RenderBlocks = ({ content, categoria }) => {
 				</div>
 				<div className="flex">
 					{/* Números de línea */}
-					<div className="flex flex-col justify-between bg-gray-900 px-3 pb-[14px] pt-[15px] text-right font-mono text-sm leading-4 text-gray-500">
+					<div className="flex flex-col pt-[14px] bg-gray-900 px-3 text-right font-mono text-sm text-gray-500">
 						{lines.map((_, i) => (
-							// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
-							<div key={i} className="select-none text-sm pl-3">
+							<div key={_} className="select-none text-sm pl-3">
 								{i + 1}. {/* Muestra el número de línea */}
 							</div>
 						))}
 					</div>
-					<pre className="flex-1 overflow-x-auto pl-3 pr-5 py-[14px] leading-4">
+					<pre className="flex overflow-x-auto pl-3 pr-5 py-[14px]">
 						<code
 							className={`language-${language} text-sm`}
 							// Uso de dangerouslySetInnerHTML para mostrar el código resaltado
