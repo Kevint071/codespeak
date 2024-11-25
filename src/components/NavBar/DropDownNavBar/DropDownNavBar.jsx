@@ -151,7 +151,7 @@ function DropDownNavBar() {
 									alignOffset={-5}
 									sideOffset={7}
 								>
-									<Link href="/recursos/python/que-es-python">
+									<Link href="/recursos/python/por-que-aprender-python">
 										<DropdownMenuItem>
 											Python
 											<DropdownMenuShortcut>
