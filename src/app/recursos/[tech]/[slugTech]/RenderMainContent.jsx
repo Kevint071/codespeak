@@ -94,7 +94,7 @@ const RenderBlocks = ({ content, categoria }) => {
 						headingClass += " " + "text-2xl mt-4 mb-1 text-purple-400";
 						break;
 					default:
-						headingClass += " " + "text-xl my-6";
+						headingClass += " " + "text-xl mt-4 mb-1";
 				}
 
 				return (
