@@ -4,6 +4,7 @@ import javascript from "highlight.js/lib/languages/javascript";
 import python from "highlight.js/lib/languages/python";
 import plaintext from "highlight.js/lib/languages/plaintext";
 import bash from "highlight.js/lib/languages/bash";
+import powershell from "highlight.js/lib/languages/powershell";
 import "highlight.js/styles/atom-one-dark.css";
 import { CopyButton } from "@/components/ui/index";
 
@@ -12,6 +13,7 @@ hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("python", python);
 hljs.registerLanguage("plaintext", plaintext);
 hljs.registerLanguage("bash", bash);
+hljs.registerLanguage("powershell", powershell);
 
 const RenderBlocks = ({ content, categoria }) => {
 	// Renderiza los estilos y el contenido de los "child" basado en su formato
@@ -91,7 +93,8 @@ const RenderBlocks = ({ content, categoria }) => {
 							" " + "text-3xl mt-6 mb-2 text-cyan-300";
 						break;
 					case 3:
-						headingClass += " " + "text-2xl mt-4 mb-1 text-purple-400";
+						headingClass +=
+							" " + "text-2xl mt-4 mb-1 text-purple-400";
 						break;
 					default:
 						headingClass += " " + "text-xl mt-4 mb-1";
@@ -124,7 +127,7 @@ const RenderBlocks = ({ content, categoria }) => {
 
 		return (
 			<ListTag
-				className="mt-8 mb-3 ml-8 text-[17px] font-light leading-6"
+				className="mb-3 ml-8 mt-8 text-[17px] font-light leading-6"
 				style={listStyle}
 			>
 				{children.map((item, index) => (
@@ -178,21 +181,21 @@ const RenderBlocks = ({ content, categoria }) => {
 			<div className="my-10 overflow-hidden rounded-lg bg-gray-900 shadow-lg">
 				<div className="flex items-center justify-between bg-gray-800 px-4 py-2">
 					<span className="text-sm font-medium text-cyan-400">
-						{language} {/* Muestra el lenguaje del código */}
+						{language === "powershell" ? "shell" : language}
 					</span>
 					<CopyButton code={code} />{" "}
 					{/* Botón para copiar el código */}
 				</div>
 				<div className="flex">
 					{/* Números de línea */}
-					<div className="flex flex-col pt-[14px] bg-gray-900 px-3 text-right font-mono text-sm text-gray-500">
+					<div className="flex flex-col bg-gray-900 px-3 pt-[14px] text-right font-mono text-sm text-gray-500">
 						{lines.map((_, i) => (
-							<div key={_} className="select-none text-sm pl-3">
+							<div key={_} className="select-none pl-3 text-sm">
 								{i + 1}. {/* Muestra el número de línea */}
 							</div>
 						))}
 					</div>
-					<pre className="flex overflow-x-auto pl-3 pr-5 py-[14px] custom-scroll">
+					<pre className="custom-scroll flex overflow-x-auto py-[14px] pl-3 pr-5">
 						<code
 							className={`language-${language} text-sm`}
 							// Uso de dangerouslySetInnerHTML para mostrar el código resaltado
@@ -207,7 +210,7 @@ const RenderBlocks = ({ content, categoria }) => {
 	};
 
 	return (
-		<div className="text-lg flex flex-col">
+		<div className="flex flex-col text-lg">
 			{/* Verifica si hay contenido disponible para renderizar */}
 			{content && content.length > 0 ? (
 				content.map((block, index) => (
