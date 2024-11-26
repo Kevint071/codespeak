@@ -15,7 +15,7 @@ async function ServerNavbarContent({ categoria }) {
 	return (
 		<>
 			{error ? (
-				<div className="flex h-full max-w-sm items-center justify-center px-8 py-10 max-sm:hidden">
+				<div className="flex h-full max-w-sm items-center justify-center px-8 py-10 max-sm:hidden mt-6">
 					<output className="relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
 						<strong className="font-bold">Error de carga: </strong>
 						<span className="block sm:inline">

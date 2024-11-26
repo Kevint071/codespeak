@@ -16,7 +16,7 @@ async function MainContent({ slug, categoria }) {
 	return (
 		<>
 			{error ? (
-				<div className="flex h-full w-full items-center justify-center px-8 py-10">
+				<div className="flex h-full w-full items-center justify-center px-8 py-10 mt-6">
 					<output className="relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
 						<strong className="font-bold">Error de carga: </strong>
 						<span className="block sm:inline">
