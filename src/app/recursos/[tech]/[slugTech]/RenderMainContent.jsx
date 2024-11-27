@@ -44,7 +44,7 @@ const RenderBlocks = ({ content, categoria }) => {
 			}).value;
 			return (
 				<code
-					className="rounded bg-gray-800 p-1 text-sm"
+					className="rounded bg-gray-800 px-1 py-0.5 text-sm"
 					// Uso de dangerouslySetInnerHTML para resaltar el código
 					dangerouslySetInnerHTML={{ __html: highlightedCode }}
 				/>
@@ -131,8 +131,8 @@ const RenderBlocks = ({ content, categoria }) => {
 				style={listStyle}
 			>
 				{children.map((item, index) => (
-					// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 					<li
+						// biome-ignore lint/suspicious/noArrayIndexKey: Don´t necessary
 						key={index}
 						style={{ display: "list-item", marginBottom: "20px" }}
 					>
@@ -197,7 +197,7 @@ const RenderBlocks = ({ content, categoria }) => {
 					</div>
 					<pre className="custom-scroll flex overflow-x-auto py-[14px] pl-3 pr-5">
 						<code
-							className={`language-${language} text-sm`}
+							className={"text-sm"}
 							// Uso de dangerouslySetInnerHTML para mostrar el código resaltado
 							dangerouslySetInnerHTML={{
 								__html: highlightedCode,
