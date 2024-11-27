@@ -7,6 +7,7 @@ import bash from "highlight.js/lib/languages/bash";
 import powershell from "highlight.js/lib/languages/powershell";
 import "highlight.js/styles/atom-one-dark.css";
 import { CopyButton } from "@/components/ui/index";
+import DOMPurify from "isomorphic-dompurify";
 
 // Registro de lenguajes para el resaltado de código
 hljs.registerLanguage("javascript", javascript);
@@ -46,7 +47,10 @@ const RenderBlocks = ({ content, categoria }) => {
 				<code
 					className="rounded bg-gray-800 px-1 py-0.5 text-sm"
 					// Uso de dangerouslySetInnerHTML para resaltar el código
-					dangerouslySetInnerHTML={{ __html: highlightedCode }}
+					// biome-ignore lint/security/noDangerouslySetInnerHtml: Se usa dompurify para limpiar el código
+					dangerouslySetInnerHTML={{
+						__html: DOMPurify.sanitize(highlightedCode),
+					}}
 				/>
 			);
 		}
@@ -199,8 +203,9 @@ const RenderBlocks = ({ content, categoria }) => {
 						<code
 							className={"text-sm"}
 							// Uso de dangerouslySetInnerHTML para mostrar el código resaltado
+							// biome-ignore lint/security/noDangerouslySetInnerHtml: Se usa dompurify para limpiar el código
 							dangerouslySetInnerHTML={{
-								__html: highlightedCode,
+								__html: DOMPurify.sanitize(highlightedCode),
 							}}
 						/>
 					</pre>

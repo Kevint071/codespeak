@@ -24,6 +24,7 @@
 		"clsx": "^2.1.1",
 		"dotenv": "^16.4.5",
 		"highlight.js": "^11.10.0",
+		"isomorphic-dompurify": "^2.17.0",
 		"lucide-react": "^0.441.0",
 		"next": "14.2.12",
 		"next-auth": "^4.24.8",
