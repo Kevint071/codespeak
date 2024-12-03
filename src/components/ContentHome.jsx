@@ -1,25 +1,36 @@
-import Image from "next/image";
+import cards from "@/data/contentData";
 
-function ContentHome({ content }) {
-  return (
-    <div className="container mx-auto flex flex-col items-center justify-center gap-x-4 gap-y-5 sm:gap-x-8 sm:px-0 sm:py-10 md:flex-row md:gap-y-0 md:py-0 lg:max-w-4xl lg:gap-x-16 xl:max-w-6xl">
-      <div className="flex w-3/4 flex-col justify-center space-y-6 px-4 text-center sm:pl-6">
-        <h2 className="text-xl font-bold text-cyan-100 md:text-2xl">
-          {content.title}
-        </h2>
-        <p className="max-w-4xl text-base text-gray-300 sm:text-base lg:text-xl">
-          {content.text}
-        </p>
-      </div>
-      <div className="flex w-1/2 justify-center overflow-hidden rounded-lg">
-        <Image
-          src={content.image}
-          alt={content.alt}
-          className="h-full w-full py-8 sm:w-3/4 sm:py-0"
-        />
-      </div>
-    </div>
-  );
+export default function ContentGrid() {
+	return (
+		<section className="w-full px-10 py-8">
+			<div className="mx-auto max-w-7xl">
+				<div className="mx-auto grid gap-x-14 gap-y-10 max-lg:gap-x-7 md:grid-cols-2 lg:grid-cols-3">
+					{cards.map((card) => (
+						<Card key={card.title} {...card} />
+					))}
+				</div>
+			</div>
+		</section>
+	);
 }
 
-export default ContentHome;
+function Card({ title, description, icon }) {
+	return (
+		<div className="group relative overflow-hidden rounded-lg border border-gray-800 bg-black/50 p-6 transition-all duration-300 ease-in-out hover:border-gray-700 hover:shadow-lg hover:shadow-cyan-500/20">
+			<div className="relative z-10">
+				<div className="mb-4 flex items-center">
+					<span className="mr-3 text-4xl">{icon}</span>
+					<h3 className="text-base font-semibold text-white md:text-lg lg:text-xl">
+						{title}
+					</h3>
+				</div>
+				<p className="mb-4 text-gray-400 transition-opacity duration-300 ease-in-out group-hover:text-gray-300">
+					{description}
+				</p>
+			</div>
+			<div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 via-blue-400/20 to-cyan-400/20 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100" />
+			<div className="absolute inset-0 bg-gradient-to-br from-pink-500 via-blue-400 to-cyan-400 opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-10" />
+			<div className="absolute bottom-0 left-0 h-1 w-0 bg-gradient-to-r from-pink-500/90 via-blue-400/90 to-cyan-400/90 transition-all duration-300 ease-in-out group-hover:w-full" />
+		</div>
+	);
+}

@@ -1,38 +1,35 @@
-import Imagen1 from "@/assets/homePage/Recurso_1.png";
-import Imagen2 from "@/assets/homePage/Recurso_2.png";
-import Imagen3 from "@/assets/homePage/Recurso_3.png";
-import Imagen4 from "@/assets/homePage/Recurso_4.png";
-// import Imagen5 from "@/assets/homePage/Recurso_5.svg";
-
-const contents = [
+const cards = [
   {
-    id: 1,
-    title: "Descubre la esencia del código",
-    text: "Aprende a programar de verdad. No solo te enseñamos código, te explicamos cómo funciona y por qué. Nuestro enfoque es profundo y fácil de entender, para que domines la programación de principio a fin.",
-    image: Imagen1,
-    alt: "Imagen de la sección 1",
+    title: "Recursos de Aprendizaje",
+    description: "Descubre materiales esenciales para dominar programación en Python, JavaScript y bases de datos.",
+    icon: "📚"
   },
   {
-    id: 2,
-    title: "Desarrolla tu talento, impulsa a otros",
-    text: "Nuestra comunidad es un espacio donde el conocimiento fluye. Comparte tus avances, proyectos o descubrimientos, y recibe retroalimentación que te hará crecer. Aquí, siempre hay algo nuevo por aprender y enseñar.",
-    image: Imagen2,
-    alt: "Imagen de la sección 2",
+    title: "Desafíos Prácticos",
+    description: "Desafíate con actividades diseñadas para mejorar tus habilidades según tu nivel.",
+    icon: "🏆"
   },
   {
-    id: 3,
-    title: "Crea, colabora, evoluciona",
-    text: "Convierte tus ideas en proyectos reales. Colabora con otros entusiastas, crea en equipo y comparte lo que has construido. Tu código no solo es personal, es la puerta a la colaboración y a nuevas oportunidades.",
-    image: Imagen3,
-    alt: "Imagen de la sección 3",
+    title: "Registro y Autenticación",
+    description: "Accede a la plataforma de manera segura creando tu cuenta fácilmente.",
+    icon: "🔐"
   },
   {
-    id: 4,
-    title: "Reta tus límites cada día",
-    text: "Cada día trae un nuevo desafío que pondrá a prueba lo que sabes y te llevará más allá. Aprende resolviendo problemas que te harán pensar, mejorar y descubrir nuevas formas de abordar el código. ¡Súmate al reto diario y sorpréndete a ti mismo!",
-    image: Imagen4,
-    alt: "Imagen de la sección 4",
+    title: "Gestión de Perfil",
+    description: "Administra tu perfil, ajusta configuraciones y sigue tu progreso educativo sin esfuerzo.",
+    icon: "👤"
   },
+  {
+    title: "Contenido Administrado",
+    description: "Explora contenido educativo seleccionado por expertos para enriquecer tu aprendizaje continuamente.",
+    icon: "🔍"
+  },
+  {
+    title: "Aprendizaje Guiado",
+    description: "Mejora tus habilidades con recursos prácticos y desafíos enfocados en tus metas.",
+    icon: "🎓"
+  }
 ];
 
-export default contents;
+
+export default cards;

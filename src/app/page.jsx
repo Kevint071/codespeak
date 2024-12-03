@@ -1,4 +1,4 @@
-import ContentHome from "@/components/ContentHome";
+import ContentGrid from "@/components/ContentHome";
 import contents from "@/data/contentData";
 import { IoIosArrowDown } from "react-icons/io";
 import { MdKeyboardDoubleArrowRight } from "react-icons/md";
@@ -33,7 +33,9 @@ export default function Homepage() {
 						href={"/desafios"}
 						className="flex flex-row items-center gap-x-2 rounded-2xl px-2 py-3 font-extrabold"
 					>
-						<button type="button" className="gradient-text">Desafíos</button>
+						<button type="button" className="gradient-text">
+							Desafíos
+						</button>
 						<MdKeyboardDoubleArrowRight color="#00ffff" size={20} />
 					</Link>
 				</div>
@@ -45,20 +47,18 @@ export default function Homepage() {
 
 					{/* Ícono de flecha hacia abajo con animación de rebote y cambio de color basado en la variable 'value' */}
 					<IoIosArrowDown
-						size={48}
 						className={clsx(
-							"mt-16 h-16 animate-[bounce_2s_ease-out_infinite] font-bold",
-							{ "text-cyan-300": value > 10 }, // Cambia a cyan-300 si el valor es mayor que 10
-							{ "text-cyan-500": value === 10 }, // Cambia a cyan-500 si el valor es exactamente 10
+							"text-4xl md:text-4xl lg:text-5xl",
+							"mt-16", // Márgenes
+							"animate-[bounce_2s_ease-out_infinite]",
+							{ "text-cyan-300": value > 10 },
+							{ "text-cyan-500": value === 10 },
 						)}
 					/>
 				</div>
 			</div>
 
-			{/* Muestra una lista de componentes ContentHome con datos dinámicos desde 'contents' */}
-			{contents.map((content) => (
-				<ContentHome content={content} key={content.id} />
-			))}
+			<ContentGrid />
 		</main>
 	);
 }
