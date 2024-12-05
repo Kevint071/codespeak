@@ -1,17 +1,23 @@
-import { clsx } from "clsx";
+"use client";
 
-interface Props extends React.LabelHTMLAttributes<HTMLLabelElement> {}
+import * as React from "react";
 
-export function Label({ children, className, ...props }: Props) {
-  return (
-    // biome-ignore lint/a11y/noLabelWithoutControl: This is a component that dont need a input because it imported from another component
-<label
-      className={clsx("block text-sm font-medium text-gray-300", className)}
-      {...props}
-    >
-      {children}
-    </label>
-  );
-}
+import { cn } from "@/lib/utils";
 
-export default Label;
+const Label = React.forwardRef<
+	HTMLLabelElement,
+	React.LabelHTMLAttributes<HTMLLabelElement>
+>(({ className, ...props }, ref) => (
+	// biome-ignore lint/a11y/noLabelWithoutControl: It's a component reusable. Don't need a control
+	<label
+		ref={ref}
+		className={cn(
+			"text-sm font-medium leading-4 text-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+			className,
+		)}
+		{...props}
+	/>
+));
+Label.displayName = "Label";
+
+export { Label };
