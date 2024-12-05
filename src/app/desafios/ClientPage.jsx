@@ -10,7 +10,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Grid, List } from "lucide-react";
+import { LayoutGrid, List } from "lucide-react";
 
 const difficultyRanges = {
 	Fácil: [1, 2, 3],
@@ -211,7 +211,7 @@ export default function ClientPage({ challenges }) {
 						size="icon"
 						onClick={() => setViewMode("grid")} // Cambia a vista de cuadrícula
 					>
-						<Grid className="h-4 w-4" />
+						<LayoutGrid className="h-4 w-4" />
 					</Button>
 					<Button
 						variant={viewMode === "list" ? "default" : "outline"}
