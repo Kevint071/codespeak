@@ -1,29 +1,39 @@
 "use client";
+
 import Link from "next/link";
-import { Input, Label, SpanError } from "@/components/ui";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { loginSchema } from "@/validations/loginSchema";
+import type { z } from "zod";
+import { EmailInput, PasswordInput} from "@/components/auth";
 
-function FormLogin() {
+// Define la estructura de los datos
+type FormLoginInputs = z.infer<typeof loginSchema>;
+
+function FormLogin(): JSX.Element {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm();
+	} = useForm<FormLoginInputs>({
+		resolver: zodResolver(loginSchema),
+	});
 
 	const router = useRouter();
-	const [error, setError] = useState(null);
+	const [error, setError] = useState<string | null>(null);
 
-	const onSubmit = handleSubmit(async (data) => {
+	const onSubmit = handleSubmit(async (data: FormLoginInputs) => {
 		const res = await signIn("credentials", {
 			email: data.email,
 			password: data.password,
 			remember: data.rememberMe,
 			redirect: false,
 		});
-		if (res.error) {
+
+		if (res?.error) {
 			setError(res.error);
 		} else {
 			router.push("/");
@@ -32,63 +42,41 @@ function FormLogin() {
 	});
 
 	return (
-		<form className="mt-8 space-y-6" onSubmit={onSubmit}>
+		<form className="flex flex-col gap-y-6" onSubmit={onSubmit} noValidate>
 			{error && (
-				<div className="animate-slide-in-from-right fixed right-4 top-[5.5rem] z-50 rounded-md bg-[#ff69b4]/60 px-6 py-3 duration-500">
-					<span className="text-sm font-medium text-white">{error}</span>
+				<div className="fixed right-4 top-[5.5rem] z-50 animate-slide-in-from-right rounded-md bg-[#ff69b4]/60 px-6 py-3 duration-500">
+					<span className="text-sm font-medium text-white">
+						{error}
+					</span>
 				</div>
 			)}
+
 			<div className="text-center">
 				<h2 className="mt-6 text-4xl font-bold text-white">
-					Inicia sesión en <span className="text-[#00ffff]">Code</span>
+					Inicia sesión en{" "}
+					<span className="text-[#00ffff]">Code</span>
 					<span className="text-[#ff69b4]">Speak</span>
 				</h2>
 				<p className="mt-2 text-base text-gray-300">
 					Continúa tu viaje de aprendizaje y desarrollo
 				</p>
 			</div>
+
 			<div className="space-y-4">
-				<div>
-					<Label htmlFor="email">Correo electrónico</Label>
-					<Input
-						id="email"
-						name="email"
-						type="email"
-						autoComplete="email"
-						placeholder="tu@ejemplo.com"
-						{...register("email", {
-							required: {
-								value: true,
-								message: "El email es obligatorio",
-							},
-						})}
-					/>
-					{errors.email && <SpanError>{errors.email.message}</SpanError>}
-				</div>
-				<div>
-					<Label htmlFor="password">Contraseña</Label>
-					<Input
+      <EmailInput register={register("email")} error={errors.email} />
+
+      <PasswordInput
 						id="password"
-						name="password"
-						type="password"
-						autoComplete="current-password"
-						placeholder="••••••••"
-						{...register("password", {
-							required: {
-								value: true,
-								message: "La contraseña es obligatoria",
-							},
-						})}
+						label="Contraseña"
+						register={register("password", {required: true})}
+						error={errors.password}
 					/>
-					{errors.password && <SpanError>{errors.password.message}</SpanError>}
-				</div>
 			</div>
 
 			<div className="flex items-center justify-between">
 				<div className="flex items-center">
 					<input
 						id="rememberMe"
-						name="rememberMe"
 						type="checkbox"
 						defaultChecked={true}
 						className="ml-[0.05rem] h-4 w-4 rounded border-gray-600 bg-gray-700 text-[#00ffff] focus:ring-[#00ffff]"
