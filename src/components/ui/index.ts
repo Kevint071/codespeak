@@ -1,8 +1,6 @@
 export { Input } from "./input";
 export { Label } from "./label";
 export { MessageError } from "./MessageError";
-export { InputError } from "./inputError";
-export { InputEndIcon } from "./inputEndIcon";
 export { H1 } from "./H1";
 export { BotonLuminoso } from "./BotonLuminoso";
 export { RegistroGoogle, RegistroGitHub } from "./RegistrosAlternativos";
