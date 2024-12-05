@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { userSchema, mappedGenders } from "@/validations/userSchema";
 import { useParams } from "next/navigation";
 import { X, ImagePlus } from "lucide-react";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui";
 
 type Inputs = {
 	name: string;

@@ -6,7 +6,7 @@ import plaintext from "highlight.js/lib/languages/plaintext";
 import bash from "highlight.js/lib/languages/bash";
 import powershell from "highlight.js/lib/languages/powershell";
 import "highlight.js/styles/atom-one-dark.css";
-import { CopyButton } from "@/components/ui/index";
+import { CopyButton } from "@/components/ui";
 import DOMPurify from "isomorphic-dompurify";
 
 // Registro de lenguajes para el resaltado de código
