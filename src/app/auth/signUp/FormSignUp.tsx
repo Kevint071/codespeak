@@ -1,9 +1,9 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { Input, Label, SpanError } from "@/components/ui";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/validations/registerSchema";
+import { EmailInput, DataUserInput, PasswordInput } from "@/components/auth";
 
 interface FormInputs {
 	name: string;
@@ -46,7 +46,7 @@ function FormSignUp(): JSX.Element {
 	});
 
 	return (
-		<form className="mt-8 space-y-6" onSubmit={onSubmit} noValidate>
+		<form className="flex flex-col gap-12" onSubmit={onSubmit} noValidate>
 			<div className="text-center">
 				<h2 className="mt-6 text-4xl font-bold text-white">
 					Únete a <span className="text-[#00ffff]">Code</span>
@@ -57,35 +57,33 @@ function FormSignUp(): JSX.Element {
 					al siguiente nivel
 				</p>
 			</div>
-			<div className="space-y-4">
-				<div className="grid grid-cols-2 gap-4">
-					<div>
-						<Label
-							htmlFor="name"
-							className="block text-sm font-medium text-gray-300"
-						>
-							Nombre y Apellido
-						</Label>
-						<Input
-							id="name"
-							type="text"
-							placeholder="James Smith"
-							data-testid="name"
-							{...register("name")}
-						/>
-						{errors.name && (
-							<SpanError data-testid="name-error">
-								{errors.name.message}
-							</SpanError>
-						)}
-					</div>
-					<div>
-						<Label
-							htmlFor="lastname"
-							className="block text-sm font-medium text-gray-300"
-						>
-							Nombre de Usuario
-						</Label>
+			<div className="flex flex-col gap-4">
+				<div className="flex max-sm:flex-col gap-4">
+					{/* <NameInput
+						register={register("name")}
+						error={errors.name}
+					/> */}
+					<DataUserInput
+						label="Nombre y Apellido"
+						id="name"
+						placeholder="James Smith"
+						register={register("name")}
+						error={errors.name}
+						maxLength={40} // Personaliza la longitud máxima si es necesario
+					/>
+
+					{/* Campo Nombre de Usuario */}
+					<DataUserInput
+						label="Nombre de Usuario"
+						id="username"
+						placeholder="Jamess071"
+						register={register("username")}
+						error={errors.username}
+						maxLength={20} // Diferente longitud máxima
+					/>
+
+					{/* <div>
+						<Label htmlFor="lastname">Nombre de Usuario</Label>
 						<Input
 							id="username"
 							type="text"
@@ -94,86 +92,29 @@ function FormSignUp(): JSX.Element {
 							{...register("username")}
 						/>
 						{errors.username && (
-							<SpanError data-testid="username-error">
+							<MessageError data-testid="username-error">
 								{errors.username.message}
-							</SpanError>
+							</MessageError>
 						)}
-					</div>
+					</div> */}
 				</div>
-				<div>
-					<Label
-						htmlFor="email"
-						className="block text-sm font-medium text-gray-300"
-					>
-						Correo electrónico
-					</Label>
-					<Input
-						id="email"
-						type="email"
-						autoComplete="email"
-						placeholder="tu@ejemplo.com"
-						data-testid="email"
-						{...register("email")}
+				<EmailInput register={register("email")} error={errors.email} />
+
+				<div className="flex max-sm:flex-col gap-4">
+					<PasswordInput
+						id="password"
+						label="Contraseña"
+						register={register("password", {required: true})}
+						error={errors.password}
 					/>
-					{errors.email && (
-						<SpanError data-testid="email-error">
-							{errors.email.message}
-						</SpanError>
-					)}
-				</div>
-				<div className="grid grid-cols-2 gap-4">
-					<div>
-						<Label
-							htmlFor="password"
-							className="block text-sm font-bold text-gray-300"
-						>
-							Contraseña
-						</Label>
-						<Input
-							id="password"
-							type="password"
-							autoComplete="new-password"
-							placeholder="••••••••"
-							data-testid="password"
-							{...register("password", {
-								required: {
-									value: true,
-									message: "La contraseña es obligatoria",
-								},
-							})}
-						/>
-						{errors.password && (
-							<SpanError data-testid="password-error">
-								{errors.password.message}
-							</SpanError>
-						)}
-					</div>
-					<div>
-						<Label
-							htmlFor="confirmPassword"
-							className="block text-sm font-medium text-gray-300"
-						>
-							Confirmar contraseña
-						</Label>
-						<Input
-							id="confirmPassword"
-							type="password"
-							autoComplete="new-password"
-							placeholder="••••••••"
-							data-testid="confirmPassword"
-							{...register("confirmPassword", {
-								required: {
-									value: true,
-									message: "La contraseña es obligatoria",
-								},
-							})}
-						/>
-						{errors.confirmPassword && (
-							<SpanError data-testid="confirmPassword-error">
-								{errors.confirmPassword.message}
-							</SpanError>
-						)}
-					</div>
+
+					{/* Campo Confirmar Contraseña */}
+					<PasswordInput
+						id="confirmPassword"
+						label="Confirmar contraseña"
+						register={register("confirmPassword", {required: true})}
+						error={errors.confirmPassword}
+					/>
 				</div>
 			</div>
 
