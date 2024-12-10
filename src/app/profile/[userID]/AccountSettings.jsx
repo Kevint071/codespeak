@@ -288,6 +288,7 @@ function DeleteAccountModal({ onClose }) {
 				setTimeout(async () => {
 					await signOut({ redirect: false });
 					router.push("/");
+					router.refresh();
 				}, 1000);
 			} else {
 				setStatus({
