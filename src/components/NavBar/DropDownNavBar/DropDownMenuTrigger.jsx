@@ -15,6 +15,8 @@ export default function DropDownMenuTrigger({ menuOpen }) {
 		.split(" ")
 		.map((word) => word[0])
 		.join("");
+	
+	const cantidad_letras = user_name.split(" ").length;
 
 	useEffect(() => {
 		const fetchImage = async () => {
@@ -27,13 +29,13 @@ export default function DropDownMenuTrigger({ menuOpen }) {
 	return (
 		<DropdownMenuTrigger className="p-2">
 			{session ? (
-				<Avatar className="bg-cyan-700 text-white">
+				<Avatar className="text-white">
 					<AvatarImage
 						src={imageProfileUrl}
 						alt="Profile"
 						className="h-full w-full object-cover"
 					/>
-					<AvatarFallback>{letras_user_name}</AvatarFallback>
+					<AvatarFallback className={`${cantidad_letras > 1 ? "text-xs" : "text-sm"} font-semibold bg-cyan-600`}>{letras_user_name}</AvatarFallback>
 				</Avatar>
 			) : menuOpen ? (
 				<IoClose color="white" size={24} />
